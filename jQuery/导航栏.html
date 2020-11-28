@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery-3.3.1.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .nav {
+            margin: 0;
+            background-color: #3b3b3b;
+            height: 50px;
+        }
+        .nav>li {
+            list-style-type: none;
+            float: left;
+            line-height: 50px;
+            color: white;
+            margin-right: 20px;
+            position: relative;
+        }
+        .shop-cart {
+            background-color: blue;
+            height: 50px;
+            width: 150px;
+            position: absolute;
+            right: 0;
+            /*display: none;*/
+        }
+        .hide {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<ul class="nav">
+    <li>登录</li>
+    <li>注册</li>
+    <li class="cart">购物车
+        <div class="shop-cart hide">
+            空空如也....
+        </div>
+    </li>
+</ul>
+<script>
+    $('.cart').hover(
+    function () {
+        $('.shop-cart').removeClass('hide')
+    },
+    function () {
+        $('.shop-cart').addClass('hide')
+    }
+
+    // function () {
+    //      $('.shop-cart').css('display','block')
+    // },
+    // function () {
+    //      $('.shop-cart').css('display','none')
+    // }
+
+
+
+
+    )
+
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table id="t1" border="1">
+    <tr>
+        <th>选择</th>
+        <th>姓名</th>
+        <th>操作</th>
+    </tr>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>喜洋洋</td>
+        <td>
+            <select>
+                <option value="1">被吃了</option>
+                <option value="2">还活着</option>
+                <option value="3">不清楚</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>美羊羊</td>
+        <td>
+            <select>
+                <option value="1">被吃了</option>
+                <option value="2">还活着</option>
+                <option value="3">不清楚</option>
+
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>懒羊羊</td>
+        <td>
+            <select>
+                <option value="1">被吃了</option>
+                <option value="2">还活着</option>
+                <option value="3">不清楚</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td><input type="checkbox"></td>
+        <td>沸羊羊</td>
+        <td>
+            <select>
+                <option value="1">被吃了</option>
+                <option value="2">还活着</option>
+                <option value="3">不清楚</option>
+            </select>
+        </td>
+    </tr>
+
+</table>
+    <button id="select-all">全选</button>
+    <button id="not-all">取消全选</button>
+    <button id="back">反选</button>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+
+<script>
+    $('#select-all').click(function () {
+        $(':checkbox').prop('checked', true)
+    });
+    $('#not-all').click(function () {
+        $(':checkbox').prop('checked', false)
+    });
+    $('#back').click(function () {
+        var $tabLstEle = $(':checkbox')
+        for (var i=0;$tabLstEle.length > i;i++) {
+            if ($($tabLstEle[i]).prop('checked')) {
+                $($tabLstEle[i]).prop('checked', false)
+            } else {
+                $($tabLstEle[i]).prop('checked', true)
+            }
+        }
+    })
+    var flag;
+    $(window).keydown(function (event) {
+        if ( event.keyCode === 16 ) {
+            flag = true;
+        };
+    });
+    $(window).keyup(function (event) {
+        if ( event.keyCode === 16 ) {
+            flag = false;
+        };
+    });
+
+    $('select').change(function (ev) {
+        var is_select = $($(this).parent().siblings().find('input')).prop('checked')
+        var thisVal = $(this).val();
+        if (flag && is_select) {
+            $('input:checked').parent().parent().find('select').val(thisVal)
+            };
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <style>
+        .cover {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: black;
+            z-index: 100;
+            opacity: 0.4;
+        }
+        .login {
+            position: absolute;
+            height: 300px;
+            width: 500px;
+            background-color: white;
+            z-index: 999;
+            left: 50%;
+            top: 50%;
+            margin-left: -250px;
+            margin-top: -150px;
+
+        }
+
+        .down {
+            float: right;
+            padding: 3px 10px;
+            background-color: red;
+            color: white;
+        }
+        .hide {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<button id="login-btn">登录</button>
+<div class="cover hide">
+</div>
+<div class="login hide">
+    <span class="down">x</span>
+</div>
+<script>
+    $('#login-btn')[0].onclick = function () {
+        console.log('点击了登录')
+        $('.cover').removeClass('hide')
+        $('.login').removeClass('hide')
+    }
+    $('.down')[0].onclick = function () {
+        $('.cover').addClass('hide')
+        $('.login').addClass('hide')
+    }
+</script>
+</body>
+</html>

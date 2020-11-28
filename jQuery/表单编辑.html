@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="jquery-3.3.1.js"></script>
+    <style>
+        .cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #8f908f;
+            z-index: 100;
+            opacity: 0.3;
+        }
+
+        .add-from label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .add-from {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 150px;
+            width: 500px;
+            z-index: 999;
+            margin-left: -250px;
+            margin-top: -100px;
+            background-color: white;
+            padding-top: 50px;
+            text-align: center;
+            /*padding: 20px;*/
+        }
+
+        .add-from .form-button {
+            padding-top: 20px;
+            padding-left: 148px;
+            text-align: left;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<button id="add">添加</button>
+<table border="1">
+    <tr>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>简介</th>
+        <th>操作</th>
+    </tr>
+    <tr>
+        <td class="number"></td>
+        <td class="name">喜羊羊</td>
+        <td class="info">聪明伶俐</td>
+        <td>
+            <button class="edit">编辑</button>
+            <button class="delete">删除</button>
+        </td>
+    </tr>
+    <tr>
+        <td class="number"></td>
+        <td class="name">灰太狼</td>
+        <td class="info">不太聪明的样子</td>
+        <td>
+            <button class="edit">编辑</button>
+            <button class="delete">删除</button>
+        </td>
+    </tr>
+    <tr>
+        <td class="number"></td>
+        <td class="name">懒洋洋</td>
+        <td class="info">头上有坨便便</td>
+        <td>
+            <button class="edit">编辑</button>
+            <button class="delete">删除</button>
+        </td>
+    </tr>
+    <tr>
+        <td class="number"></td>
+        <td class="name">美羊羊</td>
+        <td class="info">站在我身后</td>
+        <td>
+            <button class="edit">编辑</button>
+            <button class="delete">删除</button>
+        </td>
+    </tr>
+</table>
+<div class="cover hide"></div>
+<form class="add-from hide">
+    <label for="name">姓名
+        <input type="text" id="name">
+    </label>
+    <label for="info">简介
+        <input type="text" id="info">
+    </label>
+
+    <label class="form-button">
+        <button type="button" id="is_add">添加</button>
+        <button type="button" id="not_add">取消</button>
+    </label>
+</form>
+<script>
+    function setNumber() {
+        // 设置表格数据的序号
+        var startNum = 1;
+        $('table tr').find('.number').each(function () { //自带全部的number标签
+            $(this).text(startNum)  // 以此写入顺序
+            startNum++
+        })
+    }
+
+    setNumber()
+
+
+    function displayEdit() {     // 打开表单的表单function
+        $('.cover,.add-from').removeClass('hide')
+    }
+
+
+    $('table').on('click', '.delete', function () {   //触发delete 的button后删除当前的数据
+        $(this).parent().parent().remove()
+        setNumber()
+    })
+
+    $('body').on('click', '#add', function () { // 添加数据触发
+        displayEdit()   // 打开表单的表单
+
+        $('.add-from #name,.add-from #info').val('')    //清空表单中的input
+
+        $('body').data('number', $(document.createElement('td')).addClass('number')) // 创建一个number的tb
+        $('body').data('name', $(document.createElement('td')).addClass('name')) // 创建一个name的tb
+        $('body').data('info', $(document.createElement('td')).addClass('info')) // 创建一个info的tb
+        $('body').data('edit', $(document.createElement('td')).html('<button class="edit">编辑</button> <button class="delete">删除</button>')) //创建当前的button, 直接使用Html创建
+
+        // 将创建的tb放到一个新建的tr里,
+        $('body').data('trEle', $(document.createElement('tr')).append($('body').data('number'), $('body').data('name'), $('body').data('info'), $('body').data('edit')))
+
+        // 设置一个表示, 表示此次操作为add
+        $('body').data('add', true)
+    })
+
+
+    $('table').on('click', '.edit', function () { // 修改现有数据
+        displayEdit()   // 打开表单
+        $('body').data('name', $(this).parent().parent().find('.name'))  // 拿到当前现有数据中的name, juquer对象,
+        $('body').data('info', $(this).parent().parent().find('.info')) // 拿到当前现有数据中的info, juquer对象,
+        $('.add-from #name').val($('body').data('name').text()) //设置表单中的name input的val使用现有数据的name
+        $('.add-from #info').val($('body').data('info').text())//设置表单中的info input的val使用现有数据的info
+    })
+
+
+    $('form .form-button').find('button').click(function () { // 表单上的button按钮触发
+        if ($(this).attr('id') == 'is_add') {   // 先判断这次的button是否保存数据
+
+            // 从 $('body').data()中拿到,现有数据中的juquer对象, 将其text()设置为表单中对应的val(), 请注意!! 我上面$('body').data('name')保存的就直接是jQuery的对象,
+            // 所以可以直接使用对象的.text()属性设置值
+            $('body').data('name').text($('.add-from #name').val())
+            $('body').data('info').text($('.add-from #info').val())
+
+            if ($('body').data('add')) {        // 判断一下, 如果此次为 add, 就把trEle写到table的尾部
+                $('table').append($('body').data('trEle'))
+            }
+            setNumber()
+        }
+        $('body').removeData()  // 清空 .data()
+        $('.cover,.add-from').addClass('hide')    // 关闭表单
+        // $('').addClass('hide')
+
+
+    })
+
+
+</script>
+</body>
+</html>
