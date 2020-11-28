@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="https://img.icons8.com/cute-clipart/64/000000/book.png" style="width: 40px"/>
+            图书管理系统
+        </a>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="nav flex-column nav-pills">
+                    <a class="nav-link {% if index %}active{% endif %}" href="{% url 'index' %}">首页</a>
+                    <a class="nav-link {% if book %}active{% endif %}" href="{% url 'book' 'list' %}">书籍管理</a>
+                    <a class="nav-link {% if author %}active{% endif %}" href="{% url 'author' 'list' %}"">作者管理</a>
+                    <a class="nav-link {% if press %}active{% endif %}" href="{% url 'press' 'list' %}"">出版社管理</a>
+                </div>
+            </div>
+            <div class="col-md-9" style="margin-left: 3%">
+                {% block content %}
+                    <div class="index" style="margin-left: 20%;margin-top: 20%">
+                        <h1 class="display-4">样装穿在身, 我心依旧是中国心</h1>
+                        <p class="lead">欢迎来到"川建国图书管理系统"</p>
+                    </div>
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
