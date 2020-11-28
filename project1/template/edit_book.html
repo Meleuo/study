@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.css">
+        <style type="text/css">
+        div .input-group {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>编辑书籍</h1>
+    </div>
+    <form action="" method="post">
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">出版社</span>
+            <select class="form-control" name="new_press_id">
+                {% for press in press_obj %}
+                    {% if press.id == book_obj.press_id %}{% endif %}
+                    <option value="{{ press.id }}" {% if press.id == book_obj.press_id %}selected{% endif %}>{{ press.name }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">书名</span>
+            <input type="text" class="form-control" value="{{ book_obj.title }}" name="new_book_title" aria-describedby="basic-addon1">
+        </div>
+        <input type="submit" class="btn btn-success" style="margin-top: 10px">
+    </form>
+</div>
+</body>
+</html>

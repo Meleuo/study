@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.css">
+    <style type="text/css">
+        .input-group {
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>添加作者</h1>
+    </div>
+    <form action="" method="post">
+
+{#        <select class="form-control" name="books" multiple>#}
+{#            {% for book in book_list_obj %}#}
+{#                <option value="{{ book.id }}">{{ book.title }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+            {% for book in book_list_obj %}
+                <input type="checkbox" name="books"  value="{{ book.id }}">&nbsp;{{ book.title }}&nbsp;
+
+            {% endfor %}
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">作者名</span>
+            <input type="text" class="form-control" name="author" aria-describedby="basic-addon1">
+        </div>
+        <input type="submit" class="btn btn-success" style="margin-top: 10px">
+    </form>
+
+</div>
+</body>
+</html>
