@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import json
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
+from app01 import models
+
 # Create your views here.
 
 class Index(View):
@@ -22,6 +24,7 @@ class CView(View):
         res_msg = json.dumps(dmsg)
         return HttpResponse(res_msg)
 
+
 def upload(request):
     if request.is_ajax():
         my_file = request.FILES.get('f1')
@@ -30,3 +33,13 @@ def upload(request):
                 f.write(i)
         return HttpResponse('Yes')
     return render(request, 'upload.html')
+
+
+def registry(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        exists = models.UserDB.objects.filter(user=username).exists()
+        if exists:
+            return HttpResponse(0)
+        return HttpResponse(-1)
+    return render(request, 'registry.html')

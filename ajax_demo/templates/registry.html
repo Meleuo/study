@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+用户名<input type="text">
+<span class="hide">用户名已被使用</span>
+</body>
+<script src="{% static 'jquery.js' %}"></script>
+<script src="{% static 'jquery.cookie.js' %}"></script>
+
+<script>
+    $('input[type="text"]').blur(
+        function () {
+            $.ajax({
+                url: '/registry/',
+                type: 'post',
+                headers: {'X-CSRFToken': $.cookie('csrftoken')},
+                data: {
+                    username: $('input[type="text"]').val(),
+                },
+                success: function (res) {
+                    if (res == '0') {
+                        console.log('触发')
+                        $($('span')[0]).removeClass('hide')
+                    }
+                }
+
+            })
+        },
+    ).focus(function () {
+        $($('span')[0]).addClass('hide')
+    })
+</script>
+</html>

@@ -1,4 +1,4 @@
-"""ajax_demo URL Configuration
+"""form_demo URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -15,13 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app01 import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.Index.as_view()),
-    path('c/', views.CView.as_view()),
-    path('upload/', views.upload),
-    path('registry/', views.registry),
-
-    # path('index/', views.Index.as_view())
 ]
