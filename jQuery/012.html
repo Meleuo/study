@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+
+</head>
+<body>
+<button class="d1" id="d1" >点我</button>
+<button class="d1" id="d1" >点我123</button>
+
+</body>
+<script>
+    function f() {
+        alert('123')
+    }
+    // var d1Ele = document.getElementsByClassName('d1')[0]
+    // d1Ele.onclick = function () {
+    //     alert(456)
+    // }
+
+    var $d1 = $($('.d1'))
+    $d1.click(function () {
+        console.log(this)
+    })
+
+
+</script>
+</html>

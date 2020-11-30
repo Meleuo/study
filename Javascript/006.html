@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            /*transform: translate(-50%);*/
+        }
+        /*#i1 {*/
+        /*    position: absolute;*/
+        /*    right: -88px;*/
+        /*}*/
+
+    </style>
+</head>
+<body>
+<div>
+    <input id="i1" type="text" value="你看见那个太阳了吗?" >
+    <button id="i1btn" style="display: none">搜索</button>
+</div>
+<script>
+    var inputEle = document.getElementById('i1')
+    var i1btnEle = document.getElementById('i1btn')
+    inputEle.onfocus=function (){
+        if (inputEle.value == '你看见那个太阳了吗?') {
+            console.log('默认内容, 清除')
+            this.value = ''
+        }
+    }
+    inputEle.onblur=function (){
+        if (inputEle.value == '') {
+            console.log('没有内容, 恢复默认内容')
+            this.value = '你看见那个太阳了吗?'
+            i1btnEle.style.display = 'none'
+        } else {
+            console.log('有内容, 显示搜索')
+            i1btnEle.setAttribute('style', '')
+        }
+    }
+</script>
+</body>
+</html>

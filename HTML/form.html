@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="http://127.0.0.1:12138" method="post" enctype="multipart/form-data">
+    <label for="username">用户名</label>
+    <input type="text" name="username" id="username" placeholder="请输入用户名" value="Jerry">
+    <input type="password" name="password">
+    <input type="date" name="data">
+    <input type="email" name="email">
+
+    <hr>
+    <!-- 单选-->
+    <input type="radio" name="sex">
+    <input type="radio" name="sex">
+
+    <hr>
+    <!--多选-->
+    <input type="checkbox" name="coke" value="coke" checked>可乐 <!-- checked 默认选中-->
+    <input type="checkbox" name="money" value="moeny">钱
+    <hr>
+
+    <hr>
+    <select > <!-- multiple参数表示可以多选 -->
+        <option value="01" >北京</option>
+        <option value="02" selected>上海</option> <!-- 默认选中-->
+    </select>
+    <hr>
+
+    <textarea cols="20" rows="10">大文本选</textarea>
+    <hr>
+
+    <input type="file" name="images">
+    <input type="button" value="普通按钮">
+
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>

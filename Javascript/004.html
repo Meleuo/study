@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        button {
+            position: fixed;
+            top: 10px;
+            left: 0;
+
+        }
+
+        div {
+            height: 40px;
+            width: 100px;
+            background-color: red;
+            position: fixed;
+            top: 10px;
+            left: 200px;
+        }
+    </style>
+</head>
+<body>
+
+<button onclick="setImg()">显示图片</button>
+<div>不要碰我啊!!!! </div>
+<script>
+    function setImg(){
+        var buttonELe = document.getElementsByTagName('button')[0]
+        var newimg = document.createElement('img')
+        newimg.src = 'https://th.wallhaven.cc/small/39/39xrx3.jpg'
+        var bodyEle = document.getElementsByTagName('body')[0]
+        bodyEle.insertBefore(newimg,buttonELe)
+        buttonELe.innerText = '再加一个'
+    }
+    var divEle = document.getElementsByTagName('div')[0]
+    divEle.onmouseover = function (){
+        this.innerText = '告诉你别碰了'
+        setInterval(function (){
+            setImg()
+        },100)
+    }
+</script>
+</body>
+</html>
