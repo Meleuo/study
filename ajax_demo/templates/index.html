@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{#<div class="c1">{% csrf_token %}#}
+{#    <input id="i1" type="text"> <span>+</span>#}
+{#    <input id="i2" type="text">=#}
+{#    <input id="i3" type="text">#}
+{#    <input type="button" value="计算">#}
+{#</div>#}
+{#<div class="c2">#}
+{#    <input id="i1" type="text"> <span>*</span>#}
+{#    <input id="i2" type="text">=#}
+{#    <input id="i3" type="text">#}
+{#    <input type="button" value="计算">#}
+{#</div>#}
+{#{% csrf_token %}#}
+<div>
+    用户名 <input type="text" value="Jerry"><br>
+    年龄 <input type="number" value="20"><br>
+    爱好 <select multiple>
+    <option>吃饭</option>
+    <option>睡觉</option>
+    <option>打豆豆</option>
+</select>
+    <button name="submit">提交</button>
+</div>
+<hr>
+<span>服务器返回的结果</span>
+<textarea style="height: 200px;width: 200px"></textarea>
+<script src="{% static 'jquery.js' %}"></script>
+<script src="{% static 'jquery.cookie.js' %}"></script>
+{#{% csrf_token %}#}
+<script>
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                csrftoken = $.cookie('csrftoken')
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+    $('div button').click(function () {
+        $.ajax({
+            url: '/c/',
+            type: 'post',
+            data: {
+                name: 'Jerry',
+                age: 18,
+                hobby: JSON.stringify(['吃饭', '睡觉', '打豆豆']),
+                msg: JSON.stringify({
+                    name: 'Tom',
+                    age: '20'
+                })
+            },
+            success: function (res) {
+                console.log(res)
+                console.log($(this))
+                $('textarea').val(res)
+            },
+            error: function (res) {
+                console.log(res)
+                console.log($(this))
+            }
+        })
+    })
+</script>
+</body>
+</html>

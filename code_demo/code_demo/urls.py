@@ -1,4 +1,4 @@
-"""ajax_demo URL Configuration
+"""code_demo URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -14,13 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from app01 import views
+from django.urls import path, re_path
+import captcha
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.Index.as_view()),
-    path('c/', views.CView.as_view()),
-    path('upload/', views.upload),
+    re_path(r'^captcha/', include('captcha.urls')),
 
-    # path('index/', views.Index.as_view())
 ]
