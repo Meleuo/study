@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="post">{% csrf_token %}
+    <p>
+        {{ register_form.user.label }}
+        {{ register_form.user }}
+    </p>
+{#    <p>#}
+{#        {{ register_form.pwd.label }}#}
+{#        {{ register_form.pwd }}#}
+{#    </p>#}
+        <p>
+        {{ register_form.re_pwd.label }}
+        {{ register_form.re_pwd }}
+            <span>{{ register_form.re_pwd.errors.0 }}</span>
+    </p>
+{#    <p>#}
+{#        {{ register_form.is18.label }}#}
+{#        {{ register_form.is18 }}#}
+{#    </p>#}
+{#    <p>#}
+{#        {{ register_form.hobby.label }}#}
+{#        {{ register_form.hobby }}#}
+{#    </p>#}
+{#      <p>#}
+{#        {{ register_form.phone.label }}#}
+{#        {{ register_form.phone }}#}
+{#    </p>#}
+    <p>
+        {{ register_form.errors }}
+    </p>
+{#    <p>#}
+{#        {{ register_form.hobby.errors.0 }}#}
+{#    </p>#}
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
