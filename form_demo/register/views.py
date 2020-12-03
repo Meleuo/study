@@ -12,7 +12,13 @@ class RegView(View):
         return render(request, 'reg.html', {'form_obj': form_obj})
 
     def post(self, request):
-        pass
+        form_obj = RegForm(request.POST)
+        if form_obj.is_valid():
+            print(form_obj.cleaned_data)
+            return redirect('http://www.baidu.com')
+        return render(request, 'reg.html', {'form_obj': form_obj})
+
+
 
 
 class RegisterView(View):

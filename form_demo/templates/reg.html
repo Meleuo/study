@@ -5,44 +5,39 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'bootstrap-4.5.0-dist/css/bootstrap.css' %}">
+    <style>
+        .is-error input,
+        .is-error input:focus
+        {
+            border-color: red!important;
+            box-shadow: 0 0 0 0.2rem rgb(255, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-{#    <div>#}
-{#        <div class="input-group">#}
-{#            <div class="input-group-prepend">#}
-{#                <span class="input-group-text">@</span>#}
-{#            </div>#}
-{#            <input type="text" class="form-control is-invalid rounded-right" required="">#}
-{#            <div class="invalid-feedback">请选择一个用户22名。</div>#}
-{#        </div>#}
-{#    </div>#}
     <div class="row">
-        <form class="col-md-4 offset-4" style="margin-top: 20%">
-            <div class="form-group ">
+        <form action="" method="post" class="col-md-4 offset-4" style="margin-top: 20%">{% csrf_token %}
+            <div class="form-group {% if form_obj.user.errors %}is-error{% endif %}">
                 <label for="{{ form_obj.user.id_for_label }}">{{ form_obj.user.label }}</label>
                 {{ form_obj.user }}
-                {#                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">#}
-                {#                <small id="emailHelp" class="form-text text-muted">提示</small>#}
-                <div class="invalid-feedback">{{  form_obj.user.errors.0 }}</div>
-            </div>
-            <div class="form-group ">
-                <label for="{{ form_obj.user.id_for_label }}">{{ form_obj.user.label }}</label>
-                {{ form_obj.user }}
-                {#                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">#}
-                {#                <small id="emailHelp" class="form-text text-muted">提示</small>#}
-                <div class="invalid-feedback">{{  form_obj.user.errors.0 }}</div>
-            </div>
-            <div class="form-group ">
-                <label for="{{ form_obj.user.id_for_label }}">{{ form_obj.user.label }}</label>
-                {{ form_obj.user }}
-                {#                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">#}
-                {#                <small id="emailHelp" class="form-text text-muted">提示</small>#}
-                <div class="invalid-feedback">{{  form_obj.user.errors.0 }}</div>
+                <div class="">{{ form_obj.user.errors.0 }}</div>
             </div>
 
+            <div class="form-group {% if form_obj.pwd.errors or  form_obj.re_pwd.errors %}is-error{% endif %}">
+                <label for="{{ form_obj.pwd.id_for_label }}">{{ form_obj.pwd.label }}</label>
+                {{ form_obj.pwd }}
+                <div class="">{{ form_obj.pwd.errors.0 }}</div>
+            </div>
 
-            <div class="form-group form-check">
+            <div class="form-group {% if form_obj.re_pwd.errors or form_obj.pwd.errors %}is-error{% endif %}">
+                <label for="{{ form_obj.re_pwd.id_for_label }}">{{ form_obj.re_pwd.label }}</label>
+                {{ form_obj.re_pwd }}
+                <small  class="form-text text-muted">{{ form_obj.re_pwd.errors.0 }}</small>
+
+            </div>
+
+            <div class="form-group">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                 <label class="form-check-label" for="exampleCheck1">Check me out</label>
             </div>
@@ -52,5 +47,11 @@
 </div>
 <script src="{% static 'bootstrap-4.5.0-dist/js/jquery-3.5.1.js' %}"></script>
 <script src="{% static 'bootstrap-4.5.0-dist/js/bootstrap.js' %}"></script>
+<script>
+    $('input').focus(function () {
+        $('input').parent().removeClass('is-error')
+
+    })
+</script>
 </body>
 </html>

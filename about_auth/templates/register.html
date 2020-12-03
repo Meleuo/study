@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="post">{% csrf_token %}
+    <div>
+        {{ form_obj.username.label }}
+        {{ form_obj.username }}
+    </div>
+    <br>
+    <div>
+        {{ form_obj.password.label }}
+        {{ form_obj.password }}
+    </div>
+    <br>
+    <div>
+        {{ form_obj.re_password.label }}
+        {{ form_obj.re_password }}
+    </div>
+    <br>
+    {{ form_obj.errors }}
+    <input type="submit">
+
+</form>
+</body>
+</html>

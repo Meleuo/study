@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="">{% csrf_token %}
+    {{ form_obj.old_passwd.label }}
+    {{ form_obj.old_passwd }}
+    <button type="button" id="check">检查一下</button>
+    <span id="tips"></span>
+    <br>
+    {{ form_obj.new_passwd.label }}
+    {{ form_obj.new_passwd }}
+    <br>
+    {% if status == None %}
+    {% elif status %}
+        <span>修改成功, 请立即重新登录</span>
+        <a href="/login/">login</a>
+    {% else %}
+        <span>修改失败, 原密码不正确</span>
+    {% endif %}
+    <br>
+
+    <input type="submit">
+</form>
+<script src="/static/jquery.js"></script>
+<script>
+    $('#check').click(function () {
+        $.ajax({
+            url: '/check_pwd/',
+            type: 'post',
+            data: {
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                check_passwd: $('input[name="old_passwd"]').val()
+            },
+            success: function (res) {
+                if (res == 0) {
+                    $('#tips').text('原密码正确')
+                } else {
+                    $('#tips').text('原密码错误')
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>
