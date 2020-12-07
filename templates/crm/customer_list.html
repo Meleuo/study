@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}客户列表{% endblock %}
+
+
+{% block content %}
+{#<div class="bs-example" data-example-id="bordered-table">#}
+    <table class="table table-bordered  table-striped">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>QQ</th>
+            <th>QQ昵称</th>
+            <th>客户名称</th>
+            <th>性别</th>
+            <th>手机号</th>
+            <th>客户来源</th>
+            <th>咨询课程</th>
+            <th>班级类型</th>
+            <th>状态</th>
+            <th>咨询日期</th>
+            <th>最后跟进日期</th>
+            <th>销售</th>
+            <th>已报班级</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in all_customer %}
+            <tr>
+                <th>{{ customer.id }}</th>
+                <th>{{ customer.qq }}</th>
+                <th>{{ customer.qq_name|default:'暂无' }}</th>
+                <th>{{ customer.name|default:'暂无' }}</th>
+                <th>{{ customer.get_sex_display }}</th>
+                <th>{{ customer.phone|default:'暂无' }}</th>
+                <th>{{ customer.get_source_display }}</th>
+                <th>{{ customer.course }}</th>
+                <th>{{ customer.get_class_type_display }}</th>
+{#                <th>{{ customer.get_status_display }}</th>#}
+                <th>
+                    {{ customer.show_status }}
+{#                    <span style="height: 100%;padding: 3px;color: #fff;background-color: red">未报名</span>#}
+                </th>
+                <th>{{ customer.date }}</th>
+                <th>{{ customer.last_consult_date }}</th>
+                <th>{{ customer.consultant }}</th>
+                <th>{{ customer.show_class_list }}</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{#    </div>#}
+{% endblock %}

@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, AbstractUser, Permissio
 from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib import auth
-
+from django.utils.safestring import mark_safe
 # --> 字段中的 choices
 
 class_type_choices = (('fulltime', '脱产班',),
@@ -67,7 +67,7 @@ class Customer(models.Model):
     '''
     qq = models.CharField(verbose_name='客户联系QQ', max_length=11, unique=True, help_text='QQ必须是唯一')
     qq_name = models.CharField(verbose_name='QQ昵称', max_length=64, blank=True, null=True)
-    name = models.CharField(verbose_name='客户名字', blank=True, null=True,max_length=32, help_text='学员报名后, 请改为真实姓名')
+    name = models.CharField(verbose_name='客户名字', blank=True, null=True, max_length=32, help_text='学员报名后, 请改为真实姓名')
     sex = models.CharField(verbose_name='客户性别', choices=(('male', '男'), ('female', '女')), max_length=10, default='male',
                            blank=True, null=True)
     birthday = models.DateField(verbose_name='出生日期', blank=True, null=True, help_text='格式: yyyy-mm-dd')
@@ -76,18 +76,50 @@ class Customer(models.Model):
                               default='qq')
     introduce_from = models.ForeignKey('Customer', verbose_name='自介绍', on_delete=models.CASCADE, blank=True, null=True)
     course = MultiSelectField(verbose_name='咨询的课程', choices=course_choices)
-    class_type = models.CharField(verbose_name='班级类型', max_length=64, choices=source_type_choices, default='qq')
+    class_type = models.CharField(verbose_name='班级类型', max_length=64, choices=class_type_choices, default='qq')
     customer_note = models.TextField(verbose_name="客户备注", blank=True, null=True, )
     status = models.CharField("状态", choices=enroll_status_choices, max_length=64, default="unregistered",
                               help_text="选择客户此时的状态")
     network_consult_note = models.TextField(blank=True, null=True, verbose_name='网络咨询师咨询内容')
     date = models.DateTimeField("咨询日期", auto_now_add=True)
-    last_consult_date = models.DateField("最后跟进日期", auto_now_add=True)
-    next_date = models.DateField("预计再次跟进时间", blank=True, null=True)
-    network_consultant = models.ForeignKey('UserProfile', on_delete=models.CASCADE, blank=True, null=True, verbose_name='网络咨询师',
+    last_consult_date = models.DateTimeField("最后跟进日期", auto_now_add=True)
+    next_date = models.DateTimeField("预计再次跟进时间", blank=True, null=True)
+    network_consultant = models.ForeignKey('UserProfile', on_delete=models.CASCADE, blank=True, null=True,
+                                           verbose_name='网络咨询师',
                                            related_name='network_consultant')
-    consultant = models.ForeignKey('UserProfile', on_delete=models.CASCADE, verbose_name="销售", related_name='customers', blank=True, null=True, )
+    consultant = models.ForeignKey('UserProfile', on_delete=models.CASCADE, verbose_name="销售", related_name='customers',
+                                   blank=True, null=True, )
     class_list = models.ManyToManyField('ClassList', verbose_name="已报班级", )
+
+    class Meta:
+        verbose_name = '客户列表'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return '%s %s' % (self.name, self.qq_name)
+
+    def show_class_list(self):
+        msg = ''
+        # for _class in self.class_list.all():
+        #     msg = msg + str(_class)
+        return ' | '.join([str(_class) for _class in self.class_list.all()])
+
+    def show_status(self):
+        '''
+        (('signed', "已报名"),
+                             ('unregistered', "未报名"),
+                             ('studying', '学习中'),
+                             ('paid_in_full', "学费已交齐"))
+        '''
+        status_color = {
+            'signed': 'green',
+            'unregistered': 'red',
+            'studying': '#ffac00',
+            'paid_in_full': 'blue'
+        }
+        return mark_safe(
+            '<span style="height: 100%;padding: 3px;color: #fff;background-color: {}">{}</span>'.format(status_color[self.status], self.get_status_display())
+        )
 
 
 # --> 校区表
@@ -98,6 +130,13 @@ class Campuses(models.Model):
     name = models.CharField(verbose_name='校区', max_length=64)
     address = models.CharField(verbose_name='详细地址', max_length=512, blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '校区表'
+        verbose_name_plural = verbose_name
+
 
 # --> 合同模板表
 class ContractTemplate(models.Model):
@@ -107,6 +146,10 @@ class ContractTemplate(models.Model):
     name = models.CharField("合同名称", max_length=128, unique=True)
     content = models.TextField("合同内容")
     date = models.DateField(auto_now=True)
+
+    class Meta:
+        verbose_name = '合同模板表'
+        verbose_name_plural = verbose_name
 
 
 # -->  班级表
@@ -121,13 +164,19 @@ class ClassList(models.Model):
     memo = models.CharField('说明', blank=True, null=True, max_length=100)
     start_date = models.DateField("开班日期")
     graduate_date = models.DateField("结业日期", blank=True, null=True)
-    contract = models.ForeignKey('ContractTemplate', on_delete=models.CASCADE,  verbose_name="选择合同模版", blank=True, null=True)
+    contract = models.ForeignKey('ContractTemplate', on_delete=models.CASCADE, verbose_name="选择合同模版", blank=True,
+                                 null=True)
     teachers = models.ManyToManyField('UserProfile', verbose_name="老师")
     class_type = models.CharField(choices=class_type_choices, max_length=64, verbose_name='班额及类型', blank=True,
                                   null=True)
 
+    def __str__(self):
+        return '%s(%s)' % (self.get_course_display(), self.campuses.name)
+
     class Meta:
         unique_together = ('course', 'semester', 'campuses')
+        verbose_name = '班级表'
+        verbose_name_plural = verbose_name
 
 
 # --> 跟进记录表

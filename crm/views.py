@@ -3,8 +3,17 @@ from django.views.generic import View
 # Create your views here.
 
 from django.contrib import auth
+from crm import models
 from crm.forms import RegisterForm
 from crm import models
+
+
+class Customer_list(View):
+
+    def get(self, request):
+        all_customer = models.Customer.objects.all()
+        print(all_customer)
+        return render(request, 'crm/customer_list.html', {'all_customer': all_customer})
 
 
 class RegisterView(View):
