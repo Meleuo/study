@@ -49,24 +49,9 @@
         {% endfor %}
         </tbody>
     </table>
-    <nav aria-label="Page navigation">
+    <nav aria-label="Page navigation" style="text-align: center">
         <ul class="pagination">
-            <li>
-                <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-
-            </li>
-            {% for count in all_count %}
-               <li class="{% if count == page_num %}active{% endif %}">
-                   <a href="{% url 'customer_list' %}?page={{ count }}">{{ count }}</a>
-               </li>
-            {% endfor %}
-            <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+            {{ html_page }}
         </ul>
     </nav>
     {#    </div>#}
