@@ -1,64 +1,100 @@
 {% extends 'base.html' %}
-{% block title %}客户列表{% endblock %}
-{% block page_titile %}客户列表{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_titile %}{{ title }}{% endblock %}
 
+{% block style %}
+    <style>
+        td {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     {#<div class="bs-example" data-example-id="bordered-table">#}
     <a class="btn-success btn" style="margin-bottom: 5px" href="{% url 'customer_add' %}">添加用户</a>
-    <table class="table table-bordered  table-striped">
-        <thead>
-        <tr>
-            <th>序号</th>
-            <th>QQ</th>
-            <th>QQ昵称</th>
-            <th>客户名称</th>
-            {#            <th>性别</th>#}
-            <th>手机号</th>
-            <th>客户来源</th>
-            <th>咨询课程</th>
-            <th>班级类型</th>
-            <th>状态</th>
-            <th>咨询日期</th>
-            {#            <th>最后跟进日期</th>#}
-            <th>销售</th>
-            <th>已报班级</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for customer in all_customer %}
+    <form action="" method="post" class="form-inline pull-right">{% csrf_token %}
+        <input type="text" class="form-control">
+        <button class="btn btn-primary">搜索 <span class="glyphicon glyphicon-search"></span></button>
+    </form>
+    <form action="" method="post" class="form-inline">{% csrf_token %}
+        <select name="action" id="" class="form-control" style="margin-bottom: 5px">
+            <option value="none">---</option>
+            <option value="option_put_private">放入私户</option>
+            <option value="option_put_public">放入公户</option>
+            <option value="option_delete">删除选中</option>
+        </select>
+        <button type="submit" class="btn-primary btn" style="margin-bottom: 5px" href="">提交</button>
+        {% if option_ret %}
+            <div class="alert alert-success" role="alert">
+                <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                <span class="sr-only"></span>操作成功
+            </div>
+        {% endif %}
+        <table class="table table-bordered  table-striped">
+            <thead>
             <tr>
-                <td>{{ customer.id }}</td>
-                <td>{{ customer.qq }}</td>
-                <td>{{ customer.qq_name|default:'暂无' }}</td>
-                <td>{{ customer.name|default:'暂无' }}</td>
-                {#                <td>{{ customer.get_sex_display }}</td>#}
-                <td>{{ customer.phone|default:'暂无' }}</td>
-                {#                <td>{{ customer.get_source_display }}</td>#}
-                <td>{{ customer.course }}</td>
-                <td>{{ customer.get_class_type_display }}</td>
-                {#                <th>{{ customer.get_status_display }}</th>#}
-                <td>
-                    {{ customer.show_status }}
-                    {#                    <span style="height: 100%;padding: 3px;color: #fff;background-color: red">未报名</span>#}
-                </td>
-                <td>{{ customer.date }}</td>
-                <td>{{ customer.last_consult_date }}</td>
-                <td>{{ customer.consultant }}</td>
-                <td>{{ customer.show_class_list }}</td>
-                <td>
-                    <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
-                       href="{% url 'customer_edit' customer.id %}"></a>
-                </td>
+                <th>选择</th>
+                <th>序号</th>
+                <th>QQ</th>
+                <th>QQ昵称</th>
+                <th>客户名称</th>
+                {#            <th>性别</th>#}
+                <th>手机号</th>
+                <th>客户来源</th>
+                <th>咨询课程</th>
+                <th>班级类型</th>
+                <th>状态</th>
+                <th>咨询日期</th>
+                {#            <th>最后跟进日期</th>#}
+                <th>销售</th>
+                <th>已报班级</th>
+                <th>操作</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for customer in all_customer %}
+                <tr>
+                    <td>
+                        <input type="checkbox" value="{{ customer.id }}" name="id">
+                    </td>
+                    <td>{{ customer.id }}</td>
+                    <td>{{ customer.qq }}</td>
+                    <td>{{ customer.qq_name|default:'暂无' }}</td>
+                    <td>{{ customer.name|default:'暂无' }}</td>
+                    {#                <td>{{ customer.get_sex_display }}</td>#}
+                    <td>{{ customer.phone|default:'暂无' }}</td>
+                    {#                <td>{{ customer.get_source_display }}</td>#}
+                    <td>{{ customer.course }}</td>
+                    <td>{{ customer.get_class_type_display }}</td>
+                    {#                <th>{{ customer.get_status_display }}</th>#}
+                    <td>
+                        {{ customer.show_status }}
+                        {#                    <span style="height: 100%;padding: 3px;color: #fff;background-color: red">未报名</span>#}
+                    </td>
+                    <td>{{ customer.date }}</td>
+                    <td>{{ customer.last_consult_date }}</td>
+                    <td>{{ customer.consultant }}</td>
+                    <td>{{ customer.show_class_list }}</td>
+                    <td>
+                        <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
+                           href="{% url 'customer_edit' customer.id %}"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </form>
     <nav aria-label="Page navigation" style="text-align: center">
         <ul class="pagination">
             {{ html_page }}
         </ul>
     </nav>
     {#    </div>#}
+{% endblock %}
+{% block javascript %}
+    <script>
+        $('div[class="alert alert-success"]').fadeOut(3000)
+    </script>
 {% endblock %}

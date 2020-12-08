@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="{% static 'plugins/font-awesome-4.7.0/css/font-awesome.css' %}">
     <link href="{% static 'plugins/bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://v3.bootcss.com/examples/dashboard/dashboard.css">
+    {% block style %}{% endblock %}
 </head>
-
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -59,7 +59,7 @@
                 <li class="active">
                     <a href="{% url 'customer_list' %}">客户列表</a>
                 </li>
-                <li><a href="{% url 'customer_add' %}">添加用户</a></li>
+                <li><a href="{% url 'my_customer_list' %}">私户列表</a></li>
                 <li><a href="#">Analytics</a></li>
                 <li><a href="#">Export</a></li>
             </ul>
@@ -90,5 +90,6 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="{% static 'plugins/jquery-3.5.1.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-3.3.7/js/bootstrap.js' %}"></script>
+{% block javascript %}{% endblock %}
 </body>
 </html>

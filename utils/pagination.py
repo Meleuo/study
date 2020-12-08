@@ -82,7 +82,6 @@ class Pagination():
     def show_html(self):
         # --> 生成HTML
         self.html_page = ''
-        print(self.page_num)
         if self.page_num > 1:
             self.html_page = '<li><a href="{url}?page=1" aria-label="Previous"><span aria-hidden="true">首页</span></a></li>' \
                              '<li><a href="{url}?page={count}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>' \
