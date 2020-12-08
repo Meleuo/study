@@ -78,9 +78,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crm',
-        'USER': 'db_root',
-        'PASSWORD': 'vX$wv6CVa9zv',
-        'HOST': 'rm-wz9w2x2t95q8fni1yio.mysql.rds.aliyuncs.com',
+        'USER': 'root',
+        'PASSWORD': '1',
+        'HOST': '127.0.0.1',
         'PORT': 3306
     }
 }

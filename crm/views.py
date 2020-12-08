@@ -11,9 +11,25 @@ from crm import models
 class Customer_list(View):
 
     def get(self, request):
+        per_num = 30
+        page_num = request.GET.get('page', 1)
+        if page_num.isdigit():
+            page_num = int(page_num)
+        else:
+            page_num = 1
+
+        #--> 获取数据的起始和结束值
+        start_num = (page_num - 1)*per_num
+        stop_num = page_num * per_num
+
+        #--> 获取页数
         all_customer = models.Customer.objects.all()
-        print(all_customer)
-        return render(request, 'crm/customer_list.html', {'all_customer': all_customer})
+        all_count, more = divmod(len(all_customer), 30)
+        if more:
+            all_count = all_count + 1
+
+        return render(request, 'crm/customer_list.html',
+                      {'all_customer': all_customer[start_num:stop_num], 'all_count': range(1, all_count + 1), 'page_num': page_num})
 
 
 class RegisterView(View):

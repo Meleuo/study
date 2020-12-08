@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}客户列表{% endblock %}
+{% block page_titile %}客户列表{% endblock %}
 
 
 {% block content %}
-{#<div class="bs-example" data-example-id="bordered-table">#}
+    {#<div class="bs-example" data-example-id="bordered-table">#}
     <table class="table table-bordered  table-striped">
         <thead>
         <tr>
@@ -26,27 +27,47 @@
         <tbody>
         {% for customer in all_customer %}
             <tr>
-                <th>{{ customer.id }}</th>
-                <th>{{ customer.qq }}</th>
-                <th>{{ customer.qq_name|default:'暂无' }}</th>
-                <th>{{ customer.name|default:'暂无' }}</th>
-                <th>{{ customer.get_sex_display }}</th>
-                <th>{{ customer.phone|default:'暂无' }}</th>
-                <th>{{ customer.get_source_display }}</th>
-                <th>{{ customer.course }}</th>
-                <th>{{ customer.get_class_type_display }}</th>
-{#                <th>{{ customer.get_status_display }}</th>#}
-                <th>
+                <td>{{ customer.id }}</td>
+                <td>{{ customer.qq }}</td>
+                <td>{{ customer.qq_name|default:'暂无' }}</td>
+                <td>{{ customer.name|default:'暂无' }}</td>
+                <td>{{ customer.get_sex_display }}</td>
+                <td>{{ customer.phone|default:'暂无' }}</td>
+                <td>{{ customer.get_source_display }}</td>
+                <td>{{ customer.course }}</td>
+                <td>{{ customer.get_class_type_display }}</td>
+                {#                <th>{{ customer.get_status_display }}</th>#}
+                <td>
                     {{ customer.show_status }}
-{#                    <span style="height: 100%;padding: 3px;color: #fff;background-color: red">未报名</span>#}
-                </th>
-                <th>{{ customer.date }}</th>
-                <th>{{ customer.last_consult_date }}</th>
-                <th>{{ customer.consultant }}</th>
-                <th>{{ customer.show_class_list }}</th>
+                    {#                    <span style="height: 100%;padding: 3px;color: #fff;background-color: red">未报名</span>#}
+                </td>
+                <td>{{ customer.date }}</td>
+                <td>{{ customer.last_consult_date }}</td>
+                <td>{{ customer.consultant }}</td>
+                <td>{{ customer.show_class_list }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-{#    </div>#}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+
+            </li>
+            {% for count in all_count %}
+               <li class="{% if count == page_num %}active{% endif %}">
+                   <a href="{% url 'customer_list' %}?page={{ count }}">{{ count }}</a>
+               </li>
+            {% endfor %}
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {#    </div>#}
 {% endblock %}
