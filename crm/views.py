@@ -26,42 +26,45 @@ class Customer(View):
         return render(request, 'crm/customer.html', {'form_obj': form_obj}, )
 
 
-class Customer_edit(View):
-    def get(self, request, id):
-        edit_obj = models.Customer.objects.filter(id=id).first()
-        if edit_obj:
-            form_obj = CustomerForm(instance=edit_obj)
-            return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
-
-    def post(self, request, id):
-        edit_obj = models.Customer.objects.filter(id=id).first()
-        form_obj = CustomerForm(request.POST, instance=edit_obj)
-        if form_obj.is_valid():
-            form_obj.save()
-            return redirect(reverse('customer_list'))
-        return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
-
-
-class Customer_add(View):
-    def get(self, request):
-        form_obj = CustomerForm()
-        return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
-
-    def post(self, request):
-        form_obj = CustomerForm(request.POST)
-        if form_obj.is_valid():
-            print('校验成功')
-            form_obj.save()
-            return redirect(reverse('customer_list'))
-        return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+# class Customer_edit(View):
+#     def get(self, request, id):
+#         edit_obj = models.Customer.objects.filter(id=id).first()
+#         if edit_obj:
+#             form_obj = CustomerForm(instance=edit_obj)
+#             return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
+#
+#     def post(self, request, id):
+#         edit_obj = models.Customer.objects.filter(id=id).first()
+#         form_obj = CustomerForm(request.POST, instance=edit_obj)
+#         if form_obj.is_valid():
+#             form_obj.save()
+#             return redirect(reverse('customer_list'))
+#         return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
+#
+#
+# class Customer_add(View):
+#     def get(self, request):
+#         form_obj = CustomerForm()
+#         return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+#
+#     def post(self, request):
+#         form_obj = CustomerForm(request.POST)
+#         if form_obj.is_valid():
+#             print('校验成功')
+#             form_obj.save()
+#             return redirect(reverse('customer_list'))
+#         return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
 
 
 class Customer_list(View):
     def get(self, request):
+        all_customer = models.Customer.objects.filter(consultant__isnull=True).order_by('-date')
         all_customer = models.Customer.objects.all().order_by('-date')
+
         page_num = request.GET.get('page', 1)
 
         pagination_obj = Pagination(page_num=page_num, len_customer=len(all_customer), url=reverse('customer_list'))
+
 
         return render(request, 'crm/customer_list.html', {
             'all_customer': all_customer[pagination_obj.start:pagination_obj.end],
