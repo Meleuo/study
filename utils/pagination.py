@@ -11,35 +11,65 @@ class Pagination():
 
         self.url = url  # --> 页面的URl
         self.max_show = max_show  # --> 最多显示的页码数
+        half_show = max_show // 2
+
         self.per_num = per_num  # --> 一页显示数据条数
-        half_show = self.max_show // 2  # --> 取得两边分页的长度, // 向下取值
+
 
         self.all_count, more = divmod(len_customer, self.per_num)
-
         if more:
             self.all_count = self.all_count + 1
-        if self.all_count < self.max_show:
-            self.max_show = self.all_count
-            half_show = 0
 
-
-        if self.page_num <= half_show:  # -->  倘若请求的页面小于2边分页的长度
-            self.page_start = 1  # --> 分页起始值写死为1
-            self.page_end = self.max_show + 1  # --> 分页结束值设置为最大值, 再加上当前页面的分页, 一共是11个分页
-            print('11')
-
-        elif self.page_num >= self.all_count - half_show:  # --> 倘若请求的页面大于  (全部页面数 - 分页数)
-            self.page_start = self.all_count - self.max_show  # --> 起始页面 设置为 页面总数 - 最大长度
-            self.page_end = self.all_count  # --> 结尾设置总数即可
-
-
-        else:  # --> 其他正常情况保证当前分页的两侧有对应的数量的分页即可
-            self.page_start = self.page_num - half_show
-            self.page_end = self.page_num + half_show
-
-        print(self.page_start, self.page_end)
-        if self.page_start < 1:
+        if self.max_show > self.all_count:
             self.page_start = 1
+            self.page_end = self.all_count
+        else:
+            if self.page_num <= half_show:
+                self.page_start = 1
+                self.page_end = self.max_show
+            elif self.page_num + half_show > self.all_count:
+                self.page_start = self.all_count - max_show + 1
+                self.page_end = self.all_count
+            else:
+                self.page_start = self.page_num - half_show
+                self.page_end = self.page_num + half_show
+
+
+
+        #
+        # if self.all_count < self.max_show:  # --> 倘若 数据不足以支撑指定的分页数, 那么最大分页数将设置为能够支撑的分页数
+        #     self.max_show = self.all_count
+        # #
+        # elif self.all_count == self.max_show:   #--> 修复 当 数据量支撑的分页数和 最大分页数一样时, 避免额外加上自身导致多出来一个分页
+        #     self.max_show = self.all_count - 1
+        #
+        # half_show = self.max_show // 2  # --> 取得两边分页的长度, // 向下取值
+        # print('half_show', half_show)
+        #
+        # if self.page_num <= half_show:  # -->  倘若请求的页面小于2边分页的长度
+        #     self.page_start = 1  # --> 分页起始值写死为1
+        #     self.page_end = self.max_show + 1  # --> 分页结束值设置为最大值, 再加上当前页面的分页, 一共是11个分页
+        #     if half_show == 1:      #--> 避免全部的分页数满足不了 half_show的长度,  额外加上自身导致多出来一个分页
+        #         self.page_end = self.page_end -1
+        #     print('a1')
+        #
+        # elif self.page_num >= self.all_count - half_show:  # --> 倘若请求的页面大于  (全部页面数 - 分页数)
+        #     self.page_start = self.all_count - self.max_show  # --> 起始页面 设置为 页面总数 - 最大长度
+        #     self.page_end = self.all_count  # --> 结尾设置总数即可
+        #     print('a2')
+        #
+        #
+        # else:  # --> 其他正常情况保证当前分页的两侧有对应的数量的分页即可
+        #     self.page_start = self.page_num - half_show
+        #     self.page_end = self.page_num + half_show
+        #     print('a3')
+
+
+
+        # if self.page_start < 1:
+        #     self.page_start = 1
+        # print(self.page_start , self.page_end )
+
     @property
     def start(self):
         return (self.page_num - 1) * self.per_num

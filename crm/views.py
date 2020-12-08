@@ -59,7 +59,8 @@ class Customer(View):
 class Customer_list(View):
     def get(self, request):
         all_customer = models.Customer.objects.filter(consultant__isnull=True).order_by('-date')
-        all_customer = models.Customer.objects.all().order_by('-date')
+        all_customer = models.Customer.objects.filter(id__gt=520)
+        # all_customer = models.Customer.objects.all()
 
         page_num = request.GET.get('page', 1)
 
