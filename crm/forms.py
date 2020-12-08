@@ -3,6 +3,21 @@ from crm import models
 from django.core.exceptions import ValidationError
 
 
+#--> 添加客户的form
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = models.Customer
+        fields = '__all__'
+        widgets = {
+            'course': forms.SelectMultiple
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+# --> 注册的form
 class RegisterForm(forms.ModelForm):
     re_password = forms.CharField(
         label='确认密码',

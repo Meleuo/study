@@ -89,7 +89,7 @@ class Customer(models.Model):
                                            related_name='network_consultant')
     consultant = models.ForeignKey('UserProfile', on_delete=models.CASCADE, verbose_name="销售", related_name='customers',
                                    blank=True, null=True, )
-    class_list = models.ManyToManyField('ClassList', verbose_name="已报班级", )
+    class_list = models.ManyToManyField('ClassList', verbose_name="已报班级", blank=True)
 
     class Meta:
         verbose_name = '客户列表'

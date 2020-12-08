@@ -35,8 +35,9 @@
                 <li>
                     <div class="btn-group" role="group">
 
-                        <img  class="img-circle" style="height: 50px" src="{% static 'imgs/trump.jpg' %}" alt="" type="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
+                        <img class="img-circle" style="height: 50px" src="{% static 'imgs/trump.jpg' %}" alt=""
+                             type="button" data-toggle="dropdown"
+                             aria-haspopup="true" aria-expanded="false">
                         <ul class="dropdown-menu">
                             <li><a href="#">Dropdown link</a></li>
                             <li><a href="#">Dropdown link</a></li>
@@ -58,7 +59,7 @@
                 <li class="active">
                     <a href="{% url 'customer_list' %}">客户列表</a>
                 </li>
-                <li><a href="#">Reports</a></li>
+                <li><a href="{% url 'customer_add' %}">添加用户</a></li>
                 <li><a href="#">Analytics</a></li>
                 <li><a href="#">Export</a></li>
             </ul>
