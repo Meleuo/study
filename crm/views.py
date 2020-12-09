@@ -14,6 +14,19 @@ from crm.forms import ConsultRecordForm
 from utils.pagination import Pagination
 
 
+class ConsultRecord(View):
+    def get(self, request, id=None):
+        obj = models.ConsultRecord.objects.filter(id=id).first() or models.ConsultRecord(consultant=request.user)
+        form_obj = ConsultRecordForm(instance=obj)
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+    def post(self, request, id=None):
+        form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
+        if form_obj.is_valid():
+            form_obj.save()
+            return redirect(reverse('consult_record_list'))
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
 # --> 编辑跟进记录
 class ConsultRecord_edit(View):
     def get(self, request, id=None):
@@ -33,11 +46,11 @@ class ConsultRecord_edit(View):
 # --> 添加跟进记录
 class ConsultRecord_add(View):
     def get(self, request):
-        form_obj = ConsultRecordForm()
+        form_obj = ConsultRecordForm(instance=models.ConsultRecord(consultant=request.user))
         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
 
     def post(self, request):
-        form_obj = ConsultRecordForm(request.POST)
+        form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
         if form_obj.is_valid():
             form_obj.save()
             return redirect(reverse('consult_record_list'))
