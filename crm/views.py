@@ -1,8 +1,10 @@
+import copy
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.views.generic import View
 from django.utils.safestring import mark_safe
 from django.contrib import auth
+from django.db.models import Q
 
 from crm import models
 from crm.forms import RegisterForm
@@ -58,20 +60,28 @@ class Customer(View):
 
 class Customer_list(View):
     def get(self, request, option_ret=False):
+
+        q = self.get_search_contion(['qq', 'qq_name'])
+        print(' -' * 10)
+        print(q)
         if request.path_info == reverse('customer_list'):
             # --> 公户
-            all_customer = models.Customer.objects.filter(consultant__isnull=True).order_by('-date')
+            all_customer = models.Customer.objects.filter(q, consultant__isnull=True).order_by('-date')
             url = reverse('customer_list')
             title = '公户列表'
 
         else:
             # --> 私户my_customer
-            all_customer = models.Customer.objects.filter(consultant=request.user).order_by('-date')
+            all_customer = models.Customer.objects.filter(q, consultant=request.user).order_by('-date')
             url = reverse('my_customer_list')
             title = '私户列表'
 
         page_num = request.GET.get('page', 1)
-        pagination_obj = Pagination(page_num=page_num, len_customer=len(all_customer), url=url)
+        search_params = copy.deepcopy(request.GET)
+        search_params._mutable = True   #--> 允许request.GET 可有修改, 在QueryDict源代码中可有找到相关的对应内容
+        # from  django.http import QueryDict
+
+        pagination_obj = Pagination(search_params, page_num=page_num, len_customer=len(all_customer), url=url)
 
         print(option_ret)
         return render(request, 'crm/customer_list.html', {
@@ -82,42 +92,49 @@ class Customer_list(View):
         })
 
     def post(self, request):
-        print(request.POST)
         action = request.POST.get('action')
         if not hasattr(self, action):
             return HttpResponse('非法操作')
         option_ret = getattr(self, action)()
-
         return self.get(request, option_ret=option_ret)
 
     def option_put_private(self):
-        #--> 公户变私户
+        # --> 公户变私户
         request = self.request
         ids = request.POST.getlist('id')
 
-        #--> 一对多正向操作
+        # --> 一对多正向操作
         # models.Customer.objects.filter(id__in=ids).update(consultant=request.user)
 
-        #--> 一对多反向操作
+        # --> 一对多反向操作
         request.user.customers.add(*models.Customer.objects.filter(id__in=ids))
 
         return True
 
     def option_put_public(self):
-        #--> 公户变私户
+        # --> 公户变私户
         request = self.request
         ids = request.POST.getlist('id')
 
-        #--> 一对多正向操作
+        # --> 一对多正向操作
         # models.Customer.objects.filter(id__in=ids).update(consultant=None)
 
-        #--> 一对多反向操作
+        # --> 一对多反向操作
         request.user.customers.remove(*models.Customer.objects.filter(id__in=ids))
 
         return True
 
     # def option_put_private(self):
 
+    def get_search_contion(self, search_list):
+        search_content = self.request.GET.get('search', '')
+        q = Q()
+        q.connector = 'OR'
+        for i in search_list:
+            q.children.append(Q((
+                '%s__contains' %i, search_content
+            )))
+        return q
 
 class RegisterView(View):
     def get(self, request):

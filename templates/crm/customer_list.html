@@ -13,9 +13,9 @@
 {% block content %}
     {#<div class="bs-example" data-example-id="bordered-table">#}
     <a class="btn-success btn" style="margin-bottom: 5px" href="{% url 'customer_add' %}">添加用户</a>
-    <form action="" method="post" class="form-inline pull-right">{% csrf_token %}
-        <input type="text" class="form-control">
-        <button class="btn btn-primary">搜索 <span class="glyphicon glyphicon-search"></span></button>
+    <form action="" method="get" class="form-inline pull-right">
+        <input type="text" class="form-control" name="search">
+        <button type="submit" class="btn btn-primary">搜索<span class="glyphicon glyphicon-search"></span></button>
     </form>
     <form action="" method="post" class="form-inline">{% csrf_token %}
         <select name="action" id="" class="form-control" style="margin-bottom: 5px">

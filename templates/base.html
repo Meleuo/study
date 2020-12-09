@@ -1,4 +1,5 @@
 {% load static %}
+{% load get_url %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -56,10 +57,11 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="active">
+                <li class="{% if request.path_info == 'customer_list'|get_url %}active{% endif %}">
                     <a href="{% url 'customer_list' %}">客户列表</a>
                 </li>
-                <li><a href="{% url 'my_customer_list' %}">私户列表</a></li>
+                <li class="{% if request.path_info == 'my_customer_list'|get_url %}active{% endif %}">
+                    <a href="{% url 'my_customer_list' %}">私户列表</a></li>
                 <li><a href="#">Analytics</a></li>
                 <li><a href="#">Export</a></li>
             </ul>
