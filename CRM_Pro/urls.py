@@ -23,5 +23,4 @@ urlpatterns = [
     path('login/', views.LoginView.as_view()),
     path('register/', views.RegisterView.as_view()),
     path('crm/', include(crm_url)),
-
 ]

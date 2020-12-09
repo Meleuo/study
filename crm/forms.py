@@ -3,8 +3,27 @@ from crm import models
 from django.core.exceptions import ValidationError
 
 
-#--> 添加客户的form
-class CustomerForm(forms.ModelForm):
+# --> 基础Form类
+class BaseForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+
+# --> 跟进记录的form
+class ConsultRecordForm(BaseForm):
+    class Meta:
+        model = models.ConsultRecord
+        exclude = ['delete_status']
+        # widgets = {
+        #     'customer' forms.Select(choices=)
+        # }
+
+
+# --> 添加客户的form
+class CustomerForm(BaseForm):
     class Meta:
         model = models.Customer
         fields = '__all__'
@@ -12,13 +31,14 @@ class CustomerForm(forms.ModelForm):
             'course': forms.SelectMultiple
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-control'})
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     for field in self.fields.values():
+    #         field.widget.attrs.update({'class': 'form-control'})
+
 
 # --> 注册的form
-class RegisterForm(forms.ModelForm):
+class RegisterForm(BaseForm):
     re_password = forms.CharField(
         label='确认密码',
         widget=forms.PasswordInput,
@@ -47,10 +67,10 @@ class RegisterForm(forms.ModelForm):
             }
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs.update({'class': 'form-control'})
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     for field in self.fields.values():
+    #         field.widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
         pwd = self.cleaned_data.get('password')

@@ -96,7 +96,7 @@ class Customer(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return '%s %s' % (self.name, self.qq_name)
+        return '%s %s' % (self.qq, self.name if self.name else self.qq_name)
 
     def show_class_list(self):
         msg = ''

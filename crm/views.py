@@ -5,26 +5,71 @@ from django.views.generic import View
 from django.utils.safestring import mark_safe
 from django.contrib import auth
 from django.db.models import Q
+from django.http import QueryDict
 
 from crm import models
 from crm.forms import RegisterForm
 from crm.forms import CustomerForm
+from crm.forms import ConsultRecordForm
 from utils.pagination import Pagination
 
 
+# --> 编辑跟进记录
+class ConsultRecord_edit(View):
+    def get(self, request, id=None):
+        obj = models.ConsultRecord.objects.filter(id=id).first()
+        form_obj = ConsultRecordForm(instance=obj)
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+    def post(self, request, id=None):
+        obj = models.ConsultRecord.objects.filter(id=id).first()
+        form_obj = ConsultRecordForm(request.POST, instance=obj)
+        if form_obj.is_valid():
+            form_obj.save()
+            return redirect(reverse('consult_record_list'))
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+
+# --> 添加跟进记录
+class ConsultRecord_add(View):
+    def get(self, request):
+        form_obj = ConsultRecordForm()
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+    def post(self, request):
+        form_obj = ConsultRecordForm(request.POST)
+        if form_obj.is_valid():
+            form_obj.save()
+            return redirect(reverse('consult_record_list'))
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+
+# --> 跟进记录列表
+class ConsultRecord_list(View):
+    def get(self, request, id=None):
+        all_consult_record = models.ConsultRecord.objects.filter(delete_status=False)
+        return render(request, 'crm/consult_record_list.html', {
+            'all_consult_record': all_consult_record,
+        })
+
+
+# --> 客户编辑视图
 class Customer(View):
     def get(self, request, id=None):
         edit_obj = models.Customer.objects.filter(id=id).first()
-        # if edit_obj:
         form_obj = CustomerForm(instance=edit_obj)
         return render(request, 'crm/customer.html', {'form_obj': form_obj, 'id': id})
 
     def post(self, request, id=None):
+        next_url = request.GET.get('next', None)
         edit_obj = models.Customer.objects.filter(id=id).first()
         form_obj = CustomerForm(request.POST, instance=edit_obj)
         if form_obj.is_valid():
             form_obj.save()
+            if next_url:
+                return redirect(next_url)
             return redirect(reverse('customer_list'))
+
         return render(request, 'crm/customer.html', {'form_obj': form_obj}, )
 
 
@@ -57,7 +102,7 @@ class Customer(View):
 #             return redirect(reverse('customer_list'))
 #         return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
 
-
+# --> 客户展示视图
 class Customer_list(View):
     def get(self, request, option_ret=False):
 
@@ -78,17 +123,22 @@ class Customer_list(View):
 
         page_num = request.GET.get('page', 1)
         search_params = copy.deepcopy(request.GET)
-        search_params._mutable = True   #--> 允许request.GET 可有修改, 在QueryDict源代码中可有找到相关的对应内容
+        search_params._mutable = True  # --> 允许request.GET 可有修改, 在QueryDict源代码中可有找到相关的对应内容
         # from  django.http import QueryDict
 
         pagination_obj = Pagination(search_params, page_num=page_num, len_customer=len(all_customer), url=url)
 
-        print(option_ret)
+        # --> 生成一个QueryDict对象
+        nextqd = QueryDict()
+        nextqd._mutable = True  # --> QueryDict对象 可写
+        nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
+
         return render(request, 'crm/customer_list.html', {
             'all_customer': all_customer[pagination_obj.start:pagination_obj.end],
             'html_page': mark_safe(pagination_obj.show_html),
             'title': title,
-            'option_ret': option_ret if option_ret else False
+            'option_ret': option_ret if option_ret else False,
+            'next': nextqd.urlencode()  # --> 借助QueryDict的urlencode方法自动转义url中的特殊符号传递给模板
         })
 
     def post(self, request):
@@ -132,10 +182,12 @@ class Customer_list(View):
         q.connector = 'OR'
         for i in search_list:
             q.children.append(Q((
-                '%s__contains' %i, search_content
+                '%s__contains' % i, search_content
             )))
         return q
 
+
+# --> 系统注册
 class RegisterView(View):
     def get(self, request):
         form_obj = RegisterForm()
@@ -158,6 +210,7 @@ class RegisterView(View):
         return redirect('/login/')
 
 
+# --> 系统登陆
 class LoginView(View):
     def get(self, request):
         return render(request, 'login.html')

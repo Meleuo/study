@@ -62,7 +62,10 @@
                 </li>
                 <li class="{% if request.path_info == 'my_customer_list'|get_url %}active{% endif %}">
                     <a href="{% url 'my_customer_list' %}">私户列表</a></li>
-                <li><a href="#">Analytics</a></li>
+                <li>
+                    <li class="{% if request.path_info == 'consult_record_list'|get_url %}active{% endif %}">
+                    <a href="{% url 'consult_record_list' %}">客户跟进状态</a>
+                </li>
                 <li><a href="#">Export</a></li>
             </ul>
             <ul class="nav nav-sidebar">
