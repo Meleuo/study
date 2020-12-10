@@ -14,55 +14,114 @@ from crm.forms import ConsultRecordForm
 from utils.pagination import Pagination
 
 
+# --> 跟进记录添加 + 编辑表
 class ConsultRecord(View):
-    def get(self, request, id=None):
-        obj = models.ConsultRecord.objects.filter(id=id).first() or models.ConsultRecord(consultant=request.user)
+    def get(self, request):
+        '''
+           customer_id 会在私户列表中的 跟进记录 a标签中附带, customer_id对应的上一个客户ID, 通过传递客户ID确认这个请求上一个只显示
+       指定用户的跟进记录列表
+        '''
+        customer_id = request.GET.get('customer_id', '0')
+
+        '''
+        consultrecord_id 是编辑 跟进记录时传递过来的 跟进记录ID
+        '''
+        consultrecord_id = request.GET.get('consultrecord_id', '0')
+
+        if customer_id != '0':  # --> 判断customer_id是否为0(默认为0), 不为0则这次请求是一个添加指定客户 跟进记录的操作
+            # -->实例化一个ConsultRecord(跟进记录)的对象, 将当前用户和, 需要修改的客户ID传递给对象, customer_id在跟进记录的表中就是对应着客户
+            obj = models.ConsultRecord(customer_id=customer_id, consultant=request.user)
+
+            # --> 模板的Title
+            customer = models.Customer.objects.filter(id=customer_id).first()
+            title = '添加 %s的跟进记录' % customer
+
+        # --> 如果consultrecord_id能查到实际的数据, 那么则意味着这次的操作上一次修改 跟进记录 的操作
+        elif models.ConsultRecord.objects.filter(id=int(consultrecord_id)):
+            obj = models.ConsultRecord.objects.filter(id=int(consultrecord_id)).first()
+            title = '修改 %s跟进记录' % obj.customer
+
+        else:  # --> 剩下的最后一个情况就是添加跟进记录
+            title = '添加跟进记录'
+            obj = models.ConsultRecord(consultant=request.user)
+
+        #--> 将obj传递给Form, 生成表单
         form_obj = ConsultRecordForm(instance=obj)
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+        return render(request, 'crm/consult_record.html', {'form_obj': form_obj, 'title': title})
 
-    def post(self, request, id=None):
-        form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
-        if form_obj.is_valid():
-            form_obj.save()
-            return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+    def post(self, request):
+        #--> 保存操作就只区分 修改保存, 和新建保存了
+        consultrecord_id = request.GET.get('consultrecord_id', '0')
+        next_url = request.GET.get('next', None)    #--> 获取操作完成后的跳转页面
+        obj = models.ConsultRecord.objects.filter(id=int(consultrecord_id)).first() or models.ConsultRecord(
+            consultant=request.user)
 
-# --> 编辑跟进记录
-class ConsultRecord_edit(View):
-    def get(self, request, id=None):
-        obj = models.ConsultRecord.objects.filter(id=id).first()
-        form_obj = ConsultRecordForm(instance=obj)
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
-
-    def post(self, request, id=None):
-        obj = models.ConsultRecord.objects.filter(id=id).first()
         form_obj = ConsultRecordForm(request.POST, instance=obj)
         if form_obj.is_valid():
             form_obj.save()
+            if next_url:
+                return redirect(next_url)
+            # --> 不存在的情况下就跳转到consult_record_list
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+        return render(request, 'crm/consult_record.html', {'form_obj': form_obj})
 
 
-# --> 添加跟进记录
-class ConsultRecord_add(View):
-    def get(self, request):
-        form_obj = ConsultRecordForm(instance=models.ConsultRecord(consultant=request.user))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
-
-    def post(self, request):
-        form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
-        if form_obj.is_valid():
-            form_obj.save()
-            return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+# # --> 编辑跟进记录
+# class ConsultRecord_edit(View):
+#     def get(self, request, id=None):
+#         obj = models.ConsultRecord.objects.filter(id=id).first()
+#         form_obj = ConsultRecordForm(instance=obj)
+#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+#
+#     def post(self, request, id=None):
+#         obj = models.ConsultRecord.objects.filter(id=id).first()
+#         form_obj = ConsultRecordForm(request.POST, instance=obj)
+#         if form_obj.is_valid():
+#             form_obj.save()
+#             return redirect(reverse('consult_record_list'))
+#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+#
+#
+# # --> 添加跟进记录
+# class ConsultRecord_add(View):
+#     def get(self, request):
+#         form_obj = ConsultRecordForm(instance=models.ConsultRecord(consultant=request.user))
+#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+#
+#     def post(self, request):
+#         form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
+#         if form_obj.is_valid():
+#             form_obj.save()
+#             return redirect(reverse('consult_record_list'))
+#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
 
 
 # --> 跟进记录列表
+
+
+# --> 跟进记录显示列表
 class ConsultRecord_list(View):
-    def get(self, request, id=None):
-        all_consult_record = models.ConsultRecord.objects.filter(delete_status=False)
+    def get(self, request):
+        customer_id = request.GET.get('customer_id', '0')
+        if customer_id == '0':
+            all_consult_record = models.ConsultRecord.objects.filter(delete_status=False, consultant=request.user)
+            title = '全部客户跟进记录'
+        else:
+            all_consult_record = models.ConsultRecord.objects.filter(delete_status=False, customer_id=customer_id,
+                                                                     consultant=request.user)
+            customer = models.Customer.objects.filter(id=customer_id).first()
+            title = '%s 跟进记录' % (customer)
+
+        # --> 生成一个QueryDict对象
+        nextqd = QueryDict()
+        nextqd._mutable = True  # --> QueryDict对象 可写
+        nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
+
         return render(request, 'crm/consult_record_list.html', {
             'all_consult_record': all_consult_record,
+            'title': title,
+            'customer_id': customer_id,
+            'next': nextqd.urlencode()
         })
 
 
@@ -116,6 +175,8 @@ class Customer(View):
 #         return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
 
 # --> 客户展示视图
+
+
 class Customer_list(View):
     def get(self, request, option_ret=False):
 

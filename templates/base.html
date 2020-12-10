@@ -1,5 +1,5 @@
 {% load static %}
-{% load get_url %}
+{% load crm_filter %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -57,13 +57,13 @@
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-                <li class="{% if request.path_info == 'customer_list'|get_url %}active{% endif %}">
+                <li class="{{ 'customer_list'|get_url_active:request.path_info }}">
                     <a href="{% url 'customer_list' %}">客户列表</a>
                 </li>
-                <li class="{% if request.path_info == 'my_customer_list'|get_url %}active{% endif %}">
+                <li class="{{ 'my_customer_list'|get_url_active:request.path_info }}">
                     <a href="{% url 'my_customer_list' %}">私户列表</a></li>
                 <li>
-                    <li class="{% if request.path_info == 'consult_record_list'|get_url %}active{% endif %}">
+                    <li class="{{ 'consult_record_list'|get_url_active:request.path_info }}">
                     <a href="{% url 'consult_record_list' %}">客户跟进状态</a>
                 </li>
                 <li><a href="#">Export</a></li>

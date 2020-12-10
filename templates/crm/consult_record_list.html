@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}客户跟进状态{% endblock %}
-{% block page_titile %}客户跟进状态{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_titile %}{{ title }}{% endblock %}
 
 {% block style %}
     <style>
@@ -11,7 +11,7 @@
 {% endblock %}
 {% block content %}
     {#<div class="bs-example" data-example-id="bordered-table">#}
-    <a class="btn-success btn" style="margin-bottom: 5px" href="{% url 'consult_record_add' %}">添加记录</a>
+    <a class="btn-success btn" style="margin-bottom: 5px" href="{% url 'consult_record_add' %}?customer_id={{ customer_id }}&{{ next }}">添加记录</a>
     <form action="" method="get" class="form-inline pull-right">
         <input type="text" class="form-control" name="search">
         <button type="submit" class="btn btn-primary">搜索<span class="glyphicon glyphicon-search"></span></button>
@@ -54,7 +54,7 @@
                     <td>{{ record.date }}</td>
                     <td>
                         <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
-                           href="{% url 'consult_record_edit' record.id %}"></a>
+                           href="{% url 'consult_record_edit' %}?consultrecord_id={{ record.id }}&{{ next }}"></a>
                     </td>
                 </tr>
             {% endfor %}

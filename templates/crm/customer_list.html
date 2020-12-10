@@ -49,6 +49,7 @@
                 {#            <th>最后跟进日期</th>#}
                 <th>销售</th>
                 <th>已报班级</th>
+                <th>跟进记录</th>
                 <th>操作</th>
             </tr>
             </thead>
@@ -76,6 +77,17 @@
                     <td>{{ customer.last_consult_date }}</td>
                     <td>{{ customer.consultant }}</td>
                     <td>{{ customer.show_class_list }}</td>
+                    {% if customer.consultant == request.user %}
+                        <td>
+                            <a href="{% url 'consult_record_list' %}?customer_id={{ customer.id }} ">跟进记录</a>
+                        </td>
+                    {% else %}
+                        <td>
+                        <span>请先转为私户</span>
+
+                        </td>
+                    {% endif %}
+
                     <td>
                         <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
                            href="{% url 'customer_edit' customer.id %}?{{ next }}"></a>

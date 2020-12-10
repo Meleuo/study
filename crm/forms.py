@@ -18,9 +18,7 @@ class ConsultRecordForm(BaseForm):
         print('Meta执行')
         model = models.ConsultRecord
         exclude = ['delete_status']
-        # widgets = {
-        #     'customer': forms.Select(choices=((1, 'xxx'),))
-        # }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -30,9 +28,12 @@ class ConsultRecordForm(BaseForm):
 
         #--> 限制前端显示的customer(客户)数据, 只显示私户的,
         self.fields['customer'].widget.choices = [(i.id, i) for i in self.instance.consultant.customers.all()]
+        print( [(i.id, i) for i in self.instance.consultant.customers.all()])
 
         #--> 限制前端显示的consultant(当前用户), 只显示自己
         self.fields['consultant'].widget.choices = [(self.instance.consultant.id, self.instance.consultant)]
+
+
 
 
 # --> 添加客户的form
