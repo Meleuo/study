@@ -12,7 +12,7 @@
 {% block content %}
     {#<div class="bs-example" data-example-id="bordered-table">#}
     <a class="btn-success btn" style="margin-bottom: 5px"
-       href="{% url 'consult_record_add' %}?customer_id={{ customer_id }}&{{ next }}">添加记录</a>
+       href="{% url 'enrollment_add' %}?customer_id={{ customer_id }}&{{ next }}">添加记录</a>
     <form action="" method="get" class="form-inline pull-right">
         <input type="text" class="form-control" name="search">
         <button type="submit" class="btn btn-primary">搜索<span class="glyphicon glyphicon-search"></span></button>
@@ -31,36 +31,54 @@
         <table class="table table-bordered  table-striped">
             <thead>
             <tr>
+
                 <th>选择</th>
                 <th>序号</th>
+                <th>报名原因</th>
+                <th>期望</th>
+                <th>确认协议内容</th>
+                <th>确认合同</th>
+                <th>报名日期</th>
+                <th>备注</th>
                 <th>客户</th>
-                <th>跟进内容</th>
-                <th>跟进状态</th>
-                <th>报名记录</th>
-                <th>跟进人</th>
-                <th>跟进日期</th>
+                <th>学区</th>
+                <th>班级</th>
                 <th>编辑</th>
             </tr>
             </thead>
             <tbody>
-            {% for record  in all_consult_record %}
+            {{ all_enrollment_list }}
+            {% for enrollment  in all_enrollment %}
                 <tr>
                     <td>
-                        <input type="checkbox" value="{{ record.id }}">
+                        <input type="checkbox" value="{{ enrollment.id }}">
                     </td>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ record.customer }}</td>
-                    <td>{{ record.note|truncatechars:30 }}</td>
-                    <td>{{ record.get_status_display }}</td>
-                    <td>
-                        <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
-                           href="{% url 'enrollment_list' %}?customer_id={{ record.customer_id }}"></a>
+                    <td>{{ enrollment.why_us }}</td>
+                    <td>{{ enrollment.your_expectation }}</td>
+                    {#                    <td>{{ enrollment.contract_agreed }}</td>#}
+                    <td>{% if enrollment.contract_agreed %}
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color: green"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color: red"></span>
+                    {% endif %}
                     </td>
-                    <td>{{ record.consultant }}</td>
-                    <td>{{ record.date }}</td>
+                    <td>{% if enrollment.contract_approved %}
+                        <span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style="color: green"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove-sign" aria-hidden="true" style="color: red"></span>
+                    {% endif %}
+                    </td>
+                    <td>{{ enrollment.enrolled_date }}</td>
+                    <td>{{ enrollment.memo|default:'无备注' }}</td>
+                    <td>{{ enrollment.customer }}</td>
+                    <td>{{ enrollment.school }}</td>
+                    <td>{{ enrollment.enrolment_class }}</td>
+
+
                     <td>
                         <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
-                           href="{% url 'consult_record_edit' %}?consultrecord_id={{ record.id }}&{{ next }}"></a>
+                           href="{% url 'enrollment_edit' %}?enrollment_id={{ enrollment.id }}&{{ next }}"></a>
                     </td>
                 </tr>
             {% endfor %}

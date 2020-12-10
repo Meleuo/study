@@ -11,8 +11,13 @@ urlpatterns = [
     # --> 展示跟进记录
     path('consult_record/list/', views.ConsultRecord_list.as_view(), name='consult_record_list'),
     path('consult_record/add/', views.ConsultRecord.as_view(), name='consult_record_add'),
-    path('consult_record/edit/', views.ConsultRecord.as_view(), name='consult_record_edit')
+    path('consult_record/edit/', views.ConsultRecord.as_view(), name='consult_record_edit'),
     # path('consult_record/add/', views.ConsultRecord.as_view(), name='consult_record_add'),
     # path('consult_record/edit/<int:id>/', views.ConsultRecord.as_view(), name='consult_record_edit')
+
+    #--> 报名记录
+    path('enrollment/list/', views.Enrollment_list.as_view(), name='enrollment_list'),
+    path('enrollment/add/', views.Enrollment.as_view(), name='enrollment_add'),
+    path('enrollment/edit/', views.Enrollment.as_view(), name='enrollment_edit'),
 
 ]

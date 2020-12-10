@@ -13,12 +13,36 @@ class BaseForm(forms.ModelForm):
 
 
 # --> 跟进记录的form
+class EnrollmentForm(BaseForm):
+    class Meta:
+        model = models.Enrollment
+        exclude = ['delete_status']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['contract_agreed'].widget.attrs.update({'class': ''})
+        self.fields['contract_approved'].widget.attrs.update({'class': ''})
+
+        # print(self.fields['customer'])
+        # print(self.instance)
+
+        # --> 限制前端显示的customer(客户)数据, 只显示私户的,
+        # print(self.instance)
+        print(self.instance)
+        choices = [(i.id, i) for i in self.instance.customer.consultant.customers.all()]
+        choices.insert(0, ('', '---------'))
+        self.fields['customer'].widget.choices = choices
+
+        # --> 限制前端显示的consultant(当前用户), 只显示自己
+        # self.fields['consultant'].widget.choices = [(self.instance.consultant.id, self.instance.consultant)]
+
+
+# --> 跟进记录的form
 class ConsultRecordForm(BaseForm):
     class Meta:
         print('Meta执行')
         model = models.ConsultRecord
         exclude = ['delete_status']
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -26,14 +50,12 @@ class ConsultRecordForm(BaseForm):
         # print(self.fields['customer'])
         # print(self.instance)
 
-        #--> 限制前端显示的customer(客户)数据, 只显示私户的,
+        # --> 限制前端显示的customer(客户)数据, 只显示私户的,
         self.fields['customer'].widget.choices = [(i.id, i) for i in self.instance.consultant.customers.all()]
-        print( [(i.id, i) for i in self.instance.consultant.customers.all()])
+        print([(i.id, i) for i in self.instance.consultant.customers.all()])
 
-        #--> 限制前端显示的consultant(当前用户), 只显示自己
+        # --> 限制前端显示的consultant(当前用户), 只显示自己
         self.fields['consultant'].widget.choices = [(self.instance.consultant.id, self.instance.consultant)]
-
-
 
 
 # --> 添加客户的form

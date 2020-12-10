@@ -66,14 +66,12 @@
                     <li class="{{ 'consult_record_list'|get_url_active:request.path_info }}">
                     <a href="{% url 'consult_record_list' %}">客户跟进状态</a>
                 </li>
-                <li><a href="#">Export</a></li>
             </ul>
             <ul class="nav nav-sidebar">
-                <li><a href="">Nav item</a></li>
-                <li><a href="">Nav item again</a></li>
-                <li><a href="">One more nav</a></li>
-                <li><a href="">Another nav item</a></li>
-                <li><a href="">More navigation</a></li>
+                <li>
+                    <li class="{{ 'enrollment_list'|get_url_active:request.path_info }}">
+                    <a href="{% url 'enrollment_list' %}">客户报名</a>
+                </li>
             </ul>
             <ul class="nav nav-sidebar">
                 <li><a href="">Nav item again</a></li>

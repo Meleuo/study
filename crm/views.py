@@ -11,7 +11,78 @@ from crm import models
 from crm.forms import RegisterForm
 from crm.forms import CustomerForm
 from crm.forms import ConsultRecordForm
+from crm.forms import EnrollmentForm
 from utils.pagination import Pagination
+
+
+class Enrollment(View):
+    def get(self, request):
+        customer_id = request.GET.get('customer_id', '0')
+
+        enrollment_id = request.GET.get('enrollment_id', '0')
+
+        if customer_id != '0':
+            customer = models.Customer.objects.filter(id=customer_id).first()
+            obj = models.Enrollment(customer_id=customer_id, enrolment_class=customer.class_list.all().first())
+
+            # --> 模板的Title
+            title = '添加 %s的报名记录' % customer
+
+        # --> 如果consultrecord_id能查到实际的数据, 那么则意味着这次的操作上一次修改 跟进记录 的操作
+        elif models.Enrollment.objects.filter(id=int(enrollment_id)):
+            obj = models.Enrollment.objects.filter(id=int(enrollment_id)).first()
+            title = '修改 %s报名记录' % obj.customer
+
+        else:  # --> 剩下的最后一个情况就是添加跟进记录
+            title = '添加报名记录'
+            obj = models.Enrollment(customer=request.user.customers.first())
+            print(obj)
+
+        # --> 将obj传递给Form, 生成表单
+        form_obj = EnrollmentForm(instance=obj)
+        return render(request, 'crm/enrollment.html', {'form_obj': form_obj, 'title': title})
+
+    def post(self, request):
+        # --> 保存操作就只区分 修改保存, 和新建保存了
+        enrollment_id = request.GET.get('enrollment_id', '0')
+        customer_id = request.GET.get('customer_id', '0')
+
+        next_url = request.GET.get('next', None)  # --> 获取操作完成后的跳转页面
+        obj = models.Enrollment.objects.filter(id=int(enrollment_id)).first() or models.Enrollment(
+            customer=request.user.customers.first())
+
+        form_obj = EnrollmentForm(request.POST, instance=obj)
+        if form_obj.is_valid():
+            form_obj.save()
+            if next_url:
+                return redirect(next_url)
+            # --> 不存在的情况下就跳转到consult_record_list
+            return redirect(reverse('consult_record_list'))
+        return render(request, 'crm/enrollment.html', {'form_obj': form_obj})
+
+
+# --> 报名列表
+class Enrollment_list(View):
+    def get(self, request):
+        customer_id = request.GET.get('customer_id', 0)
+        if customer_id != 0:
+            all_enrollment = models.Enrollment.objects.filter(customer_id=customer_id)
+            title = '%s报名记录' % models.Customer.objects.filter(id=customer_id).first()
+
+        else:
+            all_enrollment = models.Enrollment.objects.all()
+            title = '全部报名记录'
+
+        # --> 生成一个QueryDict对象
+        nextqd = QueryDict()
+        nextqd._mutable = True  # --> QueryDict对象 可写
+        nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
+        return render(request, 'crm/enrollment_list.html',
+                      {'all_enrollment': all_enrollment,
+                       'customer_id': customer_id,
+                       'next': nextqd.urlencode(),
+                       'title': title
+                       })
 
 
 # --> 跟进记录添加 + 编辑表
@@ -45,14 +116,14 @@ class ConsultRecord(View):
             title = '添加跟进记录'
             obj = models.ConsultRecord(consultant=request.user)
 
-        #--> 将obj传递给Form, 生成表单
+        # --> 将obj传递给Form, 生成表单
         form_obj = ConsultRecordForm(instance=obj)
         return render(request, 'crm/consult_record.html', {'form_obj': form_obj, 'title': title})
 
     def post(self, request):
-        #--> 保存操作就只区分 修改保存, 和新建保存了
+        # --> 保存操作就只区分 修改保存, 和新建保存了
         consultrecord_id = request.GET.get('consultrecord_id', '0')
-        next_url = request.GET.get('next', None)    #--> 获取操作完成后的跳转页面
+        next_url = request.GET.get('next', None)  # --> 获取操作完成后的跳转页面
         obj = models.ConsultRecord.objects.filter(id=int(consultrecord_id)).first() or models.ConsultRecord(
             consultant=request.user)
 
@@ -66,37 +137,36 @@ class ConsultRecord(View):
         return render(request, 'crm/consult_record.html', {'form_obj': form_obj})
 
 
-# # --> 编辑跟进记录
-# class ConsultRecord_edit(View):
-#     def get(self, request, id=None):
-#         obj = models.ConsultRecord.objects.filter(id=id).first()
-#         form_obj = ConsultRecordForm(instance=obj)
-#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
-#
-#     def post(self, request, id=None):
-#         obj = models.ConsultRecord.objects.filter(id=id).first()
-#         form_obj = ConsultRecordForm(request.POST, instance=obj)
-#         if form_obj.is_valid():
-#             form_obj.save()
-#             return redirect(reverse('consult_record_list'))
-#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
-#
-#
-# # --> 添加跟进记录
-# class ConsultRecord_add(View):
-#     def get(self, request):
-#         form_obj = ConsultRecordForm(instance=models.ConsultRecord(consultant=request.user))
-#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
-#
-#     def post(self, request):
-#         form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
-#         if form_obj.is_valid():
-#             form_obj.save()
-#             return redirect(reverse('consult_record_list'))
-#         return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+'''编辑跟进记录&添加跟进记录
+# --> 编辑跟进记录
+class ConsultRecord_edit(View):
+    def get(self, request, id=None):
+        obj = models.ConsultRecord.objects.filter(id=id).first()
+        form_obj = ConsultRecordForm(instance=obj)
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+    def post(self, request, id=None):
+        obj = models.ConsultRecord.objects.filter(id=id).first()
+        form_obj = ConsultRecordForm(request.POST, instance=obj)
+        if form_obj.is_valid():
+            form_obj.save()
+            return redirect(reverse('consult_record_list'))
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
 
 
-# --> 跟进记录列表
+# --> 添加跟进记录
+class ConsultRecord_add(View):
+    def get(self, request):
+        form_obj = ConsultRecordForm(instance=models.ConsultRecord(consultant=request.user))
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+
+    def post(self, request):
+        form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
+        if form_obj.is_valid():
+            form_obj.save()
+            return redirect(reverse('consult_record_list'))
+        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+'''
 
 
 # --> 跟进记录显示列表
@@ -145,38 +215,40 @@ class Customer(View):
         return render(request, 'crm/customer.html', {'form_obj': form_obj}, )
 
 
-# class Customer_edit(View):
-#     def get(self, request, id):
-#         edit_obj = models.Customer.objects.filter(id=id).first()
-#         if edit_obj:
-#             form_obj = CustomerForm(instance=edit_obj)
-#             return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
-#
-#     def post(self, request, id):
-#         edit_obj = models.Customer.objects.filter(id=id).first()
-#         form_obj = CustomerForm(request.POST, instance=edit_obj)
-#         if form_obj.is_valid():
-#             form_obj.save()
-#             return redirect(reverse('customer_list'))
-#         return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
-#
-#
-# class Customer_add(View):
-#     def get(self, request):
-#         form_obj = CustomerForm()
-#         return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
-#
-#     def post(self, request):
-#         form_obj = CustomerForm(request.POST)
-#         if form_obj.is_valid():
-#             print('校验成功')
-#             form_obj.save()
-#             return redirect(reverse('customer_list'))
-#         return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+'''用户编辑&添加
+class Customer_edit(View):
+    def get(self, request, id):
+        edit_obj = models.Customer.objects.filter(id=id).first()
+        if edit_obj:
+            form_obj = CustomerForm(instance=edit_obj)
+            return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
+
+    def post(self, request, id):
+        edit_obj = models.Customer.objects.filter(id=id).first()
+        form_obj = CustomerForm(request.POST, instance=edit_obj)
+        if form_obj.is_valid():
+            form_obj.save()
+            return redirect(reverse('customer_list'))
+        return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
+
+
+class Customer_add(View):
+    def get(self, request):
+        form_obj = CustomerForm()
+        return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+
+    def post(self, request):
+        form_obj = CustomerForm(request.POST)
+        if form_obj.is_valid():
+            print('校验成功')
+            form_obj.save()
+            return redirect(reverse('customer_list'))
+        return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+
+'''
+
 
 # --> 客户展示视图
-
-
 class Customer_list(View):
     def get(self, request, option_ret=False):
 
