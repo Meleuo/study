@@ -53,8 +53,7 @@
                     <td>{{ record.note|truncatechars:30 }}</td>
                     <td>{{ record.get_status_display }}</td>
                     <td>
-                        <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
-                           href="{% url 'enrollment_list' %}?customer_id={{ record.customer_id }}"></a>
+                        <a style="text-align: center" href="{% url 'enrollment_list' %}?customer_id={{ record.customer_id }}">报名记录</a>
                     </td>
                     <td>{{ record.consultant }}</td>
                     <td>{{ record.date }}</td>

@@ -13,6 +13,7 @@ from crm.forms import CustomerForm
 from crm.forms import ConsultRecordForm
 from crm.forms import EnrollmentForm
 from utils.pagination import Pagination
+from django.db import transaction
 
 
 class Enrollment(View):
@@ -45,7 +46,7 @@ class Enrollment(View):
     def post(self, request):
         # --> 保存操作就只区分 修改保存, 和新建保存了
         enrollment_id = request.GET.get('enrollment_id', '0')
-        customer_id = request.GET.get('customer_id', '0')
+        # customer_id = request.GET.get('customer_id', '0')
 
         next_url = request.GET.get('next', None)  # --> 获取操作完成后的跳转页面
         obj = models.Enrollment.objects.filter(id=int(enrollment_id)).first() or models.Enrollment(
@@ -250,7 +251,7 @@ class Customer_add(View):
 
 # --> 客户展示视图
 class Customer_list(View):
-    def get(self, request, option_ret=False):
+    def get(self, request, option_ret=None):
 
         q = self.get_search_contion(['qq', 'qq_name'])
         print(' -' * 10)
@@ -292,6 +293,8 @@ class Customer_list(View):
         if not hasattr(self, action):
             return HttpResponse('非法操作')
         option_ret = getattr(self, action)()
+        if type(option_ret) == HttpResponse:
+            return option_ret
         return self.get(request, option_ret=option_ret)
 
     def option_put_private(self):
@@ -303,8 +306,13 @@ class Customer_list(View):
         # models.Customer.objects.filter(id__in=ids).update(consultant=request.user)
 
         # --> 一对多反向操作
-        request.user.customers.add(*models.Customer.objects.filter(id__in=ids))
-
+        with transaction.atomic():
+            add_list = models.Customer.objects.filter(id__in=ids, consultant__isnull=True).select_for_update()
+            print('len(add_list)', len(add_list))
+            print('len(ids)', len(ids))
+            if len(ids) != len(add_list):
+                return HttpResponse('123123213')
+            request.user.customers.add(*add_list)
         return True
 
     def option_put_public(self):

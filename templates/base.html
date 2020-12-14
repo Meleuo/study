@@ -62,16 +62,15 @@
                 </li>
                 <li class="{{ 'my_customer_list'|get_url_active:request.path_info }}">
                     <a href="{% url 'my_customer_list' %}">私户列表</a></li>
-                <li>
-                    <li class="{{ 'consult_record_list'|get_url_active:request.path_info }}">
+                <li class="{{ 'consult_record_list'|get_url_active:request.path_info }}">
                     <a href="{% url 'consult_record_list' %}">客户跟进状态</a>
+                </li>
+                <li class="{{ 'enrollment_list'|get_url_active:request.path_info }}">
+                    <a href="{% url 'enrollment_list' %}">客户报名</a>
                 </li>
             </ul>
             <ul class="nav nav-sidebar">
-                <li>
-                    <li class="{{ 'enrollment_list'|get_url_active:request.path_info }}">
-                    <a href="{% url 'enrollment_list' %}">客户报名</a>
-                </li>
+                <li><a href="">Nav item again</a></li>
             </ul>
             <ul class="nav nav-sidebar">
                 <li><a href="">Nav item again</a></li>

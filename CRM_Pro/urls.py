@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from crm import views
+from crm.views import customer
 from crm import urls as crm_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.LoginView.as_view()),
-    path('register/', views.RegisterView.as_view()),
+    path('login/', customer.LoginView.as_view()),
+    path('register/', customer.RegisterView.as_view()),
     path('crm/', include(crm_url)),
 ]

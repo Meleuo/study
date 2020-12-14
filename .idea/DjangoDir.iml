@@ -16,7 +16,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.python3.6-django-1.11.11" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.8 (P3.8-D3)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (P3.8_D3)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Django Lib" level="project" />
   </component>
