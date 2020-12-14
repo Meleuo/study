@@ -2,7 +2,6 @@ from django import forms
 from crm import models
 from django.core.exceptions import ValidationError
 
-
 # --> 基础Form类
 class BaseForm(forms.ModelForm):
 
@@ -11,6 +10,12 @@ class BaseForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
 
+
+#--> 班级Form
+class ClassForm(BaseForm):
+    class Meta:
+        model = models.ClassList
+        fields = '__all__'
 
 # --> 跟进记录的form
 class EnrollmentForm(BaseForm):

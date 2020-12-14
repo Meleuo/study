@@ -1,7 +1,9 @@
 from django.urls import path
 from crm.views import customer
+from crm.views import teacher
 
-urlpatterns = [
+# --> 销售相关Url
+urllist1 = [
     path('customer/', customer.Customer_list.as_view(), name='customer_list'),
     path('my_customer/', customer.Customer_list.as_view(), name='my_customer_list'),
     # path('customer/add', views.Customer_add.as_view(), name='customer_add'),
@@ -14,10 +16,18 @@ urlpatterns = [
     path('consult_record/edit/', customer.ConsultRecord.as_view(), name='consult_record_edit'),
     # path('consult_record/add/', views.ConsultRecord.as_view(), name='consult_record_add'),
     # path('consult_record/edit/<int:id>/', views.ConsultRecord.as_view(), name='consult_record_edit')
-
-    #--> 报名记录
+    # --> 报名记录
     path('enrollment/list/', customer.Enrollment_list.as_view(), name='enrollment_list'),
     path('enrollment/add/', customer.Enrollment.as_view(), name='enrollment_add'),
     path('enrollment/edit/', customer.Enrollment.as_view(), name='enrollment_edit'),
+]
+
+# --> 班主任相关URL
+urllist2 = [
+    path('class/list', teacher.ClassList.as_view(), name='class_list'),
+    path('class/add', teacher.Classes.as_view(), name='classes')
 
 ]
+
+#--> 合并路由
+urlpatterns = urllist1 + urllist2

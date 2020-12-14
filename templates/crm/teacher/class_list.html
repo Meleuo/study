@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}班级列表{% endblock %}
+{% block page_titile %}班级列表{% endblock %}
+{% block content %}
+    <div class="bs-example" data-example-id="bordered-table">
+    {{ add_btn_html }}
+    <form action="" method="get" class="form-inline pull-right">
+        <input type="text" class="form-control" name="search">
+        <button type="submit" class="btn btn-primary">搜索<span class="glyphicon glyphicon-search"></span></button>
+    </form>
+    <form action="" method="post" class="form-inline">{% csrf_token %}
+        <select name="action" id="" class="form-control" style="margin-bottom: 5px">
+            <option value="none">---</option>
+        </select>
+        <button type="submit" class="btn-primary btn" style="margin-bottom: 5px" href="">提交</button>
+        <table class="table table-bordered  table-striped">
+            <thead>
+            <tr>
+                <th>选择</th>
+                <th>序号</th>
+                <th>课程名称</th>
+                <th>学期</th>
+                <th>校区</th>
+                <th>开班日期</th>
+                <th>结业日期</th>
+                <th>老师</th>
+
+                <th>编辑</th>
+            </tr>
+            </thead>
+            <tbody>
+            {#                course = models.CharField("课程名称", max_length=64, choices=course_choices)#}
+            {#                semester = models.IntegerField("学期")#}
+            {#                campuses = models.ForeignKey('Campuses', on_delete=models.CASCADE, verbose_name="校区")#}
+            {#                price = models.IntegerField("学费", default=10000)#}
+            {#                memo = models.CharField('说明', blank=True, null=True, max_length=100)#}
+            {#                start_date = models.DateField("开班日期")#}
+            {#                graduate_date = models.DateField("结业日期", blank=True, null=True)#}
+            {#                contract = models.ForeignKey('ContractTemplate', on_delete=models.CASCADE, verbose_name="选择合同模版",#}
+            {#                blank=True,#}
+            {#                null=True)#}
+            {#                teachers = models.ManyToManyField('UserProfile', verbose_name="老师")#}
+            {#                class_type = models.CharField(choices=class_type_choices, max_length=64, verbose_name='班额及类型',#}
+            {#                blank=True,#}
+            {#                null=True)#}
+            {% for class_value  in all_classs %}
+                <tr>
+                    <td>
+                        <input type="checkbox" value="{{ class_value.id }}">
+                    </td>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ class_value.course }}</td>
+                    <td>{{ class_value.semester }}</td>
+                    <td>{{ class_value.campuses }}</td>
+                    <td>{{ class_value.start_date }}</td>
+                    <td>{{ class_value.graduate_date }}</td>
+                    <td>{{ class_value.show_teachers }}</td>
+                    <td>
+                        <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true"
+                           href="1"></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </form>
+    <nav aria-label="Page navigation" style="text-align: center">
+        <ul class="pagination">
+            {{ page_html }}
+        </ul>
+    </nav>
+    {#    </div>#}
+{% endblock %}

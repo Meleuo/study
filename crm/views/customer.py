@@ -41,7 +41,7 @@ class Enrollment(View):
 
         # --> 将obj传递给Form, 生成表单
         form_obj = EnrollmentForm(instance=obj)
-        return render(request, 'crm/enrollment.html', {'form_obj': form_obj, 'title': title})
+        return render(request, 'crm/customer/enrollment.html', {'form_obj': form_obj, 'title': title})
 
     def post(self, request):
         # --> 保存操作就只区分 修改保存, 和新建保存了
@@ -59,7 +59,7 @@ class Enrollment(View):
                 return redirect(next_url)
             # --> 不存在的情况下就跳转到consult_record_list
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/enrollment.html', {'form_obj': form_obj})
+        return render(request, 'crm/customer/enrollment.html', {'form_obj': form_obj})
 
 
 # --> 报名列表
@@ -78,7 +78,7 @@ class Enrollment_list(View):
         nextqd = QueryDict()
         nextqd._mutable = True  # --> QueryDict对象 可写
         nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
-        return render(request, 'crm/enrollment_list.html',
+        return render(request, 'crm/customer/enrollment_list.html',
                       {'all_enrollment': all_enrollment,
                        'customer_id': customer_id,
                        'next': nextqd.urlencode(),
@@ -119,7 +119,7 @@ class ConsultRecord(View):
 
         # --> 将obj传递给Form, 生成表单
         form_obj = ConsultRecordForm(instance=obj)
-        return render(request, 'crm/consult_record.html', {'form_obj': form_obj, 'title': title})
+        return render(request, 'crm/customer/consult_record.html', {'form_obj': form_obj, 'title': title})
 
     def post(self, request):
         # --> 保存操作就只区分 修改保存, 和新建保存了
@@ -135,7 +135,7 @@ class ConsultRecord(View):
                 return redirect(next_url)
             # --> 不存在的情况下就跳转到consult_record_list
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/consult_record.html', {'form_obj': form_obj})
+        return render(request, 'crm/customer/consult_record.html', {'form_obj': form_obj})
 
 
 '''编辑跟进记录&添加跟进记录
@@ -144,7 +144,7 @@ class ConsultRecord_edit(View):
     def get(self, request, id=None):
         obj = models.ConsultRecord.objects.filter(id=id).first()
         form_obj = ConsultRecordForm(instance=obj)
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+        return render(request, 'customer/consult_record_add.html', {'form_obj': form_obj})
 
     def post(self, request, id=None):
         obj = models.ConsultRecord.objects.filter(id=id).first()
@@ -152,21 +152,21 @@ class ConsultRecord_edit(View):
         if form_obj.is_valid():
             form_obj.save()
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+        return render(request, 'customer/consult_record_add.html', {'form_obj': form_obj})
 
 
 # --> 添加跟进记录
 class ConsultRecord_add(View):
     def get(self, request):
         form_obj = ConsultRecordForm(instance=models.ConsultRecord(consultant=request.user))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+        return render(request, 'customer/consult_record_add.html', {'form_obj': form_obj})
 
     def post(self, request):
         form_obj = ConsultRecordForm(request.POST, instance=models.ConsultRecord(consultant=request.user))
         if form_obj.is_valid():
             form_obj.save()
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/consult_record_add.html', {'form_obj': form_obj})
+        return render(request, 'customer/consult_record_add.html', {'form_obj': form_obj})
 '''
 
 
@@ -188,7 +188,7 @@ class ConsultRecord_list(View):
         nextqd._mutable = True  # --> QueryDict对象 可写
         nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
 
-        return render(request, 'crm/consult_record_list.html', {
+        return render(request, 'crm/customer/consult_record_list.html', {
             'all_consult_record': all_consult_record,
             'title': title,
             'customer_id': customer_id,
@@ -201,7 +201,7 @@ class Customer(View):
     def get(self, request, id=None):
         edit_obj = models.Customer.objects.filter(id=id).first()
         form_obj = CustomerForm(instance=edit_obj)
-        return render(request, 'crm/customer.html', {'form_obj': form_obj, 'id': id})
+        return render(request, 'crm/customer/customer.html', {'form_obj': form_obj, 'id': id})
 
     def post(self, request, id=None):
         next_url = request.GET.get('next', None)
@@ -213,7 +213,7 @@ class Customer(View):
                 return redirect(next_url)
             return redirect(reverse('customer_list'))
 
-        return render(request, 'crm/customer.html', {'form_obj': form_obj}, )
+        return render(request, 'crm/customer/customer.html', {'form_obj': form_obj}, )
 
 
 '''用户编辑&添加
@@ -222,7 +222,7 @@ class Customer_edit(View):
         edit_obj = models.Customer.objects.filter(id=id).first()
         if edit_obj:
             form_obj = CustomerForm(instance=edit_obj)
-            return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
+            return render(request, 'customer/customer_edit.html', {'form_obj': form_obj})
 
     def post(self, request, id):
         edit_obj = models.Customer.objects.filter(id=id).first()
@@ -230,13 +230,13 @@ class Customer_edit(View):
         if form_obj.is_valid():
             form_obj.save()
             return redirect(reverse('customer_list'))
-        return render(request, 'crm/customer_edit.html', {'form_obj': form_obj})
+        return render(request, 'customer/customer_edit.html', {'form_obj': form_obj})
 
 
 class Customer_add(View):
     def get(self, request):
         form_obj = CustomerForm()
-        return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+        return render(request, 'customer/customer_add.html', {'form_obj': form_obj})
 
     def post(self, request):
         form_obj = CustomerForm(request.POST)
@@ -244,7 +244,7 @@ class Customer_add(View):
             print('校验成功')
             form_obj.save()
             return redirect(reverse('customer_list'))
-        return render(request, 'crm/customer_add.html', {'form_obj': form_obj})
+        return render(request, 'customer/customer_add.html', {'form_obj': form_obj})
 
 '''
 
@@ -273,14 +273,14 @@ class Customer_list(View):
         search_params._mutable = True  # --> 允许request.GET 可有修改, 在QueryDict源代码中可有找到相关的对应内容
         # from  django.http import QueryDict
 
-        pagination_obj = Pagination(search_params, page_num=page_num, len_customer=len(all_customer), url=url)
+        pagination_obj = Pagination(search_params, page_num=page_num, all_count=len(all_customer), url=url)
 
         # --> 生成一个QueryDict对象
         nextqd = QueryDict()
         nextqd._mutable = True  # --> QueryDict对象 可写
         nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
 
-        return render(request, 'crm/customer_list.html', {
+        return render(request, 'crm/customer/customer_list.html', {
             'all_customer': all_customer[pagination_obj.start:pagination_obj.end],
             'html_page': mark_safe(pagination_obj.show_html),
             'title': title,

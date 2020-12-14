@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib import auth
 from django.utils.safestring import mark_safe
+
 # --> 字段中的 choices
 
 class_type_choices = (('fulltime', '脱产班',),
@@ -118,7 +119,8 @@ class Customer(models.Model):
             'paid_in_full': 'blue'
         }
         return mark_safe(
-            '<span style="height: 100%;padding: 3px;color: #fff;background-color: {}">{}</span>'.format(status_color[self.status], self.get_status_display())
+            '<span style="height: 100%;padding: 3px;color: #fff;background-color: {}">{}</span>'.format(
+                status_color[self.status], self.get_status_display())
         )
 
 
@@ -172,6 +174,9 @@ class ClassList(models.Model):
 
     def __str__(self):
         return '%s(%s)' % (self.get_course_display(), self.campuses.name)
+
+    def show_teachers(self):
+        return '|'.join([i.username for i in self.teachers.all()])
 
     class Meta:
         unique_together = ('course', 'semester', 'campuses')

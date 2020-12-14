@@ -1,7 +1,7 @@
 # --> 分页器方法
 
 class Pagination():
-    def __init__(self, search_params, page_num, len_customer, url, max_show=10, per_num=10):
+    def __init__(self, search_params, page_num, all_count, url, max_show=10, per_num=10):
         try:
             self.page_num = int(page_num)  # --> 当前页面的 序号
             if self.page_num <= 0:
@@ -18,21 +18,21 @@ class Pagination():
 
         self.per_num = per_num  # --> 一页显示数据条数
 
-        self.all_count, more = divmod(len_customer, self.per_num)
+        self.all_count, more = divmod(all_count, self.per_num)
         if more:
             self.all_count = self.all_count + 1
 
-        if self.max_show > self.all_count:
+        if self.max_show > self.all_count:     #--> 当前数据的分页数小于最大分页数, 从第一页开始显示, 到当前数据的总数结束
             self.page_start = 1
             self.page_end = self.all_count
-        else:
-            if self.page_num <= half_show:
-                self.page_start = 1
-                self.page_end = self.max_show
-            elif self.page_num + half_show > self.all_count:
-                self.page_start = self.all_count - max_show + 1
-                self.page_end = self.all_count
-            else:
+        else:   #--> 其他情况则为当前数据的分页数大于最大分页数
+            if self.page_num <= half_show:  #--> 当前分页小于或等于 half_show, 意味着左边不需要处理
+                self.page_start = 1 #--> 从1开始显示
+                self.page_end = self.max_show   #--> 到最大分页数结束
+            elif self.page_num + half_show > self.all_count:    #--> 当前分页 + half_show大于数据的总分页, 意味着数据的右边不需要处理
+                self.page_start = self.all_count - max_show + 1 #--> 左边使用最大分页减去最大分页数+ 1得到左边的值
+                self.page_end = self.all_count      #--> 右边使用all_count即可
+            else:       #--> 其他则为左右都需要处理,
                 self.page_start = self.page_num - half_show
                 self.page_end = self.page_num + half_show
         #
@@ -69,11 +69,11 @@ class Pagination():
 
     @property
     def start(self):
-        return (self.page_num - 1) * self.per_num
+        return int((self.page_num - 1) * self.per_num)
 
     @property
     def end(self):
-        return self.page_num * self.per_num
+        return int(self.page_num * self.per_num)
 
     def _get_html(self, content, params=None): #--> 生成HTML的方法
         if not params:

@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="{% static 'plugins/font-awesome-4.7.0/css/font-awesome.css' %}">
     <link href="{% static 'plugins/bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://v3.bootcss.com/examples/dashboard/dashboard.css">
+    <style>
+        td {
+            text-align: center;
+        }
+    </style>
     {% block style %}{% endblock %}
 </head>
 <body>
@@ -70,10 +75,9 @@
                 </li>
             </ul>
             <ul class="nav nav-sidebar">
-                <li><a href="">Nav item again</a></li>
-            </ul>
-            <ul class="nav nav-sidebar">
-                <li><a href="">Nav item again</a></li>
+                <li class="{{ 'class_list'|get_url_active:request.path_info }}">
+                    <a href="{% url 'class_list' %}">班级列表</a>
+                </li>
                 <li><a href="">One more nav</a></li>
                 <li><a href="">Another nav item</a></li>
             </ul>
