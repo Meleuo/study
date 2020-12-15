@@ -21,6 +21,7 @@ class Courses(View):
 
     def post(self, request):
         form_obj = forms.CourseForm(request.POST)
+
         if form_obj.is_valid:
             form_obj.save()
             return redirect(reverse('course_list'))
