@@ -28,22 +28,22 @@ class Enrollment(View):
                 customer_id=customer_id, enrolment_class=customer.class_list.all().first())
 
             # --> 模板的Title
-            title = '添加 %s的报名记录' % customer
+            self.title = '添加 %s的报名记录' % customer
 
         # --> 如果consultrecord_id能查到实际的数据, 那么则意味着这次的操作上一次修改 跟进记录 的操作
         elif models.Enrollment.objects.filter(id=int(enrollment_id)):
             obj = models.Enrollment.objects.filter(
                 id=int(enrollment_id)).first()
-            title = '修改 %s报名记录' % obj.customer
+            self.title = '修改 %s报名记录' % obj.customer
 
         else:  # --> 剩下的最后一个情况就是添加跟进记录
-            title = '添加报名记录'
+            self.title = '添加报名记录'
             obj = models.Enrollment(customer=request.user.customers.first())
             print(obj)
 
         # --> 将obj传递给Form, 生成表单
         form_obj = EnrollmentForm(instance=obj)
-        return render(request, 'crm/customer/enrollment.html', {'form_obj': form_obj, 'title': title})
+        return render(request, 'form.html', {'form_obj': form_obj, 'title': self.title})
 
     def post(self, request):
         # --> 保存操作就只区分 修改保存, 和新建保存了
@@ -61,10 +61,11 @@ class Enrollment(View):
                 return redirect(next_url)
             # --> 不存在的情况下就跳转到consult_record_list
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/customer/enrollment.html', {'form_obj': form_obj})
-
+        return render(request, 'form.html', {'form_obj': form_obj, 'title': self.title})
 
 # --> 报名列表
+
+
 class Enrollment_list(View):
     def get(self, request):
         customer_id = request.GET.get('customer_id', 0)
@@ -82,6 +83,7 @@ class Enrollment_list(View):
         nextqd = QueryDict()
         nextqd._mutable = True  # --> QueryDict对象 可写
         nextqd['next'] = request.get_full_path()  # --> 获取当前页面的完整URl 放到nextqd中
+
         return render(request, 'crm/customer/enrollment_list.html',
                       {'all_enrollment': all_enrollment,
                        'customer_id': customer_id,
@@ -112,21 +114,21 @@ class ConsultRecord(View):
 
             # --> 模板的Title
             customer = models.Customer.objects.filter(id=customer_id).first()
-            title = '添加 %s的跟进记录' % customer
+            self.title = '添加 %s的跟进记录' % customer
 
         # --> 如果consultrecord_id能查到实际的数据, 那么则意味着这次的操作上一次修改 跟进记录 的操作
         elif models.ConsultRecord.objects.filter(id=int(consultrecord_id)):
             obj = models.ConsultRecord.objects.filter(
                 id=int(consultrecord_id)).first()
-            title = '修改 %s跟进记录' % obj.customer
+            self.title = '修改 %s跟进记录' % obj.customer
 
         else:  # --> 剩下的最后一个情况就是添加跟进记录
-            title = '添加跟进记录'
+            self.title = '添加跟进记录'
             obj = models.ConsultRecord(consultant=request.user)
 
         # --> 将obj传递给Form, 生成表单
         form_obj = ConsultRecordForm(instance=obj)
-        return render(request, 'crm/customer/consult_record.html', {'form_obj': form_obj, 'title': title})
+        return render(request, 'form.html', {'form_obj': form_obj, 'title': self.title})
 
     def post(self, request):
         # --> 保存操作就只区分 修改保存, 和新建保存了
@@ -142,7 +144,7 @@ class ConsultRecord(View):
                 return redirect(next_url)
             # --> 不存在的情况下就跳转到consult_record_list
             return redirect(reverse('consult_record_list'))
-        return render(request, 'crm/customer/consult_record.html', {'form_obj': form_obj})
+        return render(request, 'form.html', {'form_obj': form_obj, 'title': self.title})
 
 
 '''编辑跟进记录&添加跟进记录
@@ -209,7 +211,9 @@ class Customer(View):
     def get(self, request, id=None):
         edit_obj = models.Customer.objects.filter(id=id).first()
         form_obj = CustomerForm(instance=edit_obj)
-        return render(request, 'crm/customer/customer.html', {'form_obj': form_obj, 'id': id})
+        self.title = '客户编辑'
+
+        return render(request, 'form.html', {'form_obj': form_obj, 'title': self.title, 'id': id})
 
     def post(self, request, id=None):
         next_url = request.GET.get('next', None)
@@ -221,7 +225,7 @@ class Customer(View):
                 return redirect(next_url)
             return redirect(reverse('customer_list'))
 
-        return render(request, 'crm/customer/customer.html', {'form_obj': form_obj}, )
+        return render(request, 'form.html', {'form_obj': form_obj, 'title': self.title})
 
 
 '''用户编辑&添加
@@ -391,3 +395,4 @@ class LoginView(View):
             auth.login(request, obj)
             return redirect(reverse('my_customer_list'))
         return render(request, 'login.html', {'msg': '用户名密码错误'})
+

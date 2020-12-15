@@ -1,7 +1,5 @@
 .idea/
+*.log
+*.pot
 *.pyc
-*~
-*#
-tmp*
-.vscode/*
-
+__pycache__/

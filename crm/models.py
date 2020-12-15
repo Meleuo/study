@@ -179,7 +179,7 @@ class ClassList(models.Model):
     graduate_date = models.DateField("结业日期", blank=True, null=True)
     contract = models.ForeignKey('ContractTemplate', on_delete=models.CASCADE, verbose_name="选择合同模版", blank=True,
                                  null=True)
-    teachers = models.ManyToManyField('UserProfile', verbose_name="老师")
+    teachers = models.ManyToManyField('UserProfile', verbose_name="老师", related_name='classlist')
     class_type = models.CharField(choices=class_type_choices, max_length=64, verbose_name='班额及类型', blank=True,
                                   null=True)
 
@@ -282,7 +282,7 @@ class CourseRecord(models.Model):
     re_class = models.ForeignKey(
         'ClassList', on_delete=models.CASCADE, verbose_name="班级")
     teacher = models.ForeignKey(
-        'UserProfile', on_delete=models.CASCADE, verbose_name="讲师")
+        'UserProfile', on_delete=models.CASCADE, verbose_name="班主任")
 
     class Meta:
         unique_together = ('re_class', 'day_num')

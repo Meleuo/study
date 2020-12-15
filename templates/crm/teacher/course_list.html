@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}班级记录列表{% endblock %}
-{% block page_titile %}班级记录列表{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_titile %}{{ title }}{% endblock %}
 {% block content %}
 <div class="bs-example" data-example-id="bordered-table">
     {{ add_btn_html }}
@@ -24,7 +24,7 @@
                     <th>作业标题</th>
                     <th>得分点</th>
                     <th>班级</th>
-                    <th>老师</th>
+                    <th>班主任</th>
                     <th>编辑</th>
                 </tr>
             </thead>
@@ -42,9 +42,8 @@
                     <td>{{ course.scoring_point }}</td>
                     <td>{{ course.re_class }}</td>
                     <td>{{ course.teacher }}</td>
-
                     <td>
-                        <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true" href="1"></a>
+                        <a style="text-align: center" class="fa fa-pencil-square-o" aria-hidden="true" href="{% url 'course_edit' %}?course_edit_id={{ course.id }}"></a>
                     </td>
                 </tr>
                 {% endfor %}

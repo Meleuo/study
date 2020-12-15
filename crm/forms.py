@@ -3,6 +3,7 @@ from django.db.models import fields
 from crm import models
 from django.core.exceptions import ValidationError
 
+
 # --> 基础Form类
 
 
@@ -23,6 +24,10 @@ class CourseForm(BaseForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['has_homework'].widget.attrs.update({'class': ''})
+        self.fields['teacher'].widget.choices = ((self.instance.teacher.id, self.instance.teacher),)
+
+        re_class_choices = [(i.id, i) for i in self.instance.teacher.classlist.all()]
+        self.fields['re_class'].widget.choices = re_class_choices
 
 
 # --> 班级Form
@@ -30,6 +35,23 @@ class ClassForm(BaseForm):
     class Meta:
         model = models.ClassList
         fields = '__all__'
+    #
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    # def clean(self):
+    #     ret = models.ClassList.objects.filter(
+    #         course=self.cleaned_data.get('course'),
+    #         semester=self.cleaned_data.get('semester'),
+    #         campuses=self.cleaned_data.get('campuses'),
+    #     )
+    #     print('111111')
+    #     print(self.cleaned_data.get('teachers'))
+    #     if ret:
+    #         self.add_error('course', '同一: 学期,校区,课程名称的班级已经存在,无法重复添加')
+    #         raise ValidationError( '同一: 学期,校区,课程名称的班级已经存在,无法重复添加')
+    #         # print(ret)
+    #     return self.cleaned_data
 
 
 # --> 跟进记录的form
