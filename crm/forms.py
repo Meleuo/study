@@ -1,8 +1,11 @@
 from django import forms
+from django.db.models import fields
 from crm import models
 from django.core.exceptions import ValidationError
 
 # --> 基础Form类
+
+
 class BaseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -11,11 +14,23 @@ class BaseForm(forms.ModelForm):
             field.widget.attrs.update({'class': 'form-control'})
 
 
-#--> 班级Form
+# -->  班级记录Form
+class CourseForm(BaseForm):
+    class Meta:
+        model = models.CourseRecord
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['has_homework'].widget.attrs.update({'class': ''})
+
+
+# --> 班级Form
 class ClassForm(BaseForm):
     class Meta:
         model = models.ClassList
         fields = '__all__'
+
 
 # --> 跟进记录的form
 class EnrollmentForm(BaseForm):
@@ -34,7 +49,8 @@ class EnrollmentForm(BaseForm):
         # --> 限制前端显示的customer(客户)数据, 只显示私户的,
         # print(self.instance)
         print(self.instance)
-        choices = [(i.id, i) for i in self.instance.customer.consultant.customers.all()]
+        choices = [(i.id, i)
+                   for i in self.instance.customer.consultant.customers.all()]
         choices.insert(0, ('', '---------'))
         self.fields['customer'].widget.choices = choices
 
@@ -56,11 +72,13 @@ class ConsultRecordForm(BaseForm):
         # print(self.instance)
 
         # --> 限制前端显示的customer(客户)数据, 只显示私户的,
-        self.fields['customer'].widget.choices = [(i.id, i) for i in self.instance.consultant.customers.all()]
+        self.fields['customer'].widget.choices = [
+            (i.id, i) for i in self.instance.consultant.customers.all()]
         print([(i.id, i) for i in self.instance.consultant.customers.all()])
 
         # --> 限制前端显示的consultant(当前用户), 只显示自己
-        self.fields['consultant'].widget.choices = [(self.instance.consultant.id, self.instance.consultant)]
+        self.fields['consultant'].widget.choices = [
+            (self.instance.consultant.id, self.instance.consultant)]
 
 
 # --> 添加客户的form

@@ -2,6 +2,7 @@
 {% load crm_filter %}
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,7 +13,6 @@
     <link rel="icon" href="../../favicon.ico">
 
     <title>{% block title %}Base Title{% endblock %}-CRM系统</title>
-
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="{% static 'plugins/font-awesome-4.7.0/css/font-awesome.css' %}">
     <link href="{% static 'plugins/bootstrap-3.3.7/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -24,78 +24,82 @@
     </style>
     {% block style %}{% endblock %}
 </head>
+
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <img src="{% static 'imgs/crm.png' %}" alt="" style="height: 50px;float: left;margin-right: 4px">
+                <a class="navbar-brand" href="#">CRM 系统</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <i class="fa fa-bell" aria-hidden="true"></i>
+                    <li><a href="#">任务 <i class="fa fa-bell" aria-hidden="true"></i> <span class="badge">123</span> </a>
+                    </li>
+                    <li><a href="#">通知</a></li>
+                    <li><a href="#">消息</a></li>
+                    <li>
+                        <div class="btn-group" role="group">
+
+                            <img class="img-circle" style="height: 50px" src="{% static 'imgs/trump.jpg' %}" alt=""
+                                type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Dropdown link</a></li>
+                                <li><a href="#">Dropdown link</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+            </div>
+        </div>
+    </nav>
+
     <div class="container-fluid">
-        <div class="navbar-header">
-            <img src="{% static 'imgs/crm.png' %}" alt="" style="height: 50px;float: left;margin-right: 4px">
-            <a class="navbar-brand" href="#">CRM 系统</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <i class="fa fa-bell" aria-hidden="true"></i>
-                <li><a href="#">任务 <i class="fa fa-bell" aria-hidden="true"></i> <span class="badge">123</span> </a>
-                </li>
-                <li><a href="#">通知</a></li>
-                <li><a href="#">消息</a></li>
-                <li>
-                    <div class="btn-group" role="group">
-
-                        <img class="img-circle" style="height: 50px" src="{% static 'imgs/trump.jpg' %}" alt=""
-                             type="button" data-toggle="dropdown"
-                             aria-haspopup="true" aria-expanded="false">
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Dropdown link</a></li>
-                            <li><a href="#">Dropdown link</a></li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
-        </div>
-    </div>
-</nav>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="{{ 'customer_list'|get_url_active:request.path_info }}">
-                    <a href="{% url 'customer_list' %}">客户列表</a>
-                </li>
-                <li class="{{ 'my_customer_list'|get_url_active:request.path_info }}">
-                    <a href="{% url 'my_customer_list' %}">私户列表</a></li>
-                <li class="{{ 'consult_record_list'|get_url_active:request.path_info }}">
-                    <a href="{% url 'consult_record_list' %}">客户跟进状态</a>
-                </li>
-                <li class="{{ 'enrollment_list'|get_url_active:request.path_info }}">
-                    <a href="{% url 'enrollment_list' %}">客户报名</a>
-                </li>
-            </ul>
-            <ul class="nav nav-sidebar">
-                <li class="{{ 'class_list'|get_url_active:request.path_info }}">
-                    <a href="{% url 'class_list' %}">班级列表</a>
-                </li>
-                <li><a href="">One more nav</a></li>
-                <li><a href="">Another nav item</a></li>
-            </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">{% block page_titile %}Crm 系统{% endblock %}</h1>
-            {% block content %}
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="{{ 'customer_list'|get_url_active:request.path_info }}">
+                        <a href="{% url 'customer_list' %}">客户列表</a>
+                    </li>
+                    <li class="{{ 'my_customer_list'|get_url_active:request.path_info }}">
+                        <a href="{% url 'my_customer_list' %}">私户列表</a></li>
+                    <li class="{{ 'consult_record_list'|get_url_active:request.path_info }}">
+                        <a href="{% url 'consult_record_list' %}">客户跟进状态</a>
+                    </li>
+                    <li class="{{ 'enrollment_list'|get_url_active:request.path_info }}">
+                        <a href="{% url 'enrollment_list' %}">客户报名</a>
+                    </li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <li class="{{ 'class_list'|get_url_active:request.path_info }}">
+                        <a href="{% url 'class_list' %}">班级列表</a>
+                    </li>
+                    <li class="{{ 'course_list'|get_url_active:request.path_info }}">
+                        <a href="{% url 'course_list' %}">课程记录</a>
+                    </li>
+                    <li><a href="">One more nav</a></li>
+                    <li><a href="">Another nav item</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h1 class="page-header">{% block page_titile %}Crm 系统{% endblock %}</h1>
+                {% block content %}
                 <span>content</span>
-            {% endblock %}
+                {% endblock %}
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Bootstrap core JavaScript
+    <!-- Bootstrap core JavaScript
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="{% static 'plugins/jquery-3.5.1.js' %}"></script>
-<script src="{% static 'plugins/bootstrap-3.3.7/js/bootstrap.js' %}"></script>
-{% block javascript %}{% endblock %}
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'plugins/jquery-3.5.1.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-3.3.7/js/bootstrap.js' %}"></script>
+    {% block javascript %}{% endblock %}
 </body>
+
 </html>

@@ -1,17 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <style>
-
         /* BASIC */
         html {
             background-color: #56baed;
 
         }
+
         body {
             font-family: "Poppins", sans-serif;
             height: 100%;
@@ -85,7 +86,9 @@
 
         /* FORM TYPOGRAPHY*/
 
-        input[type=button], input[type=submit], input[type=reset] {
+        input[type=button],
+        input[type=submit],
+        input[type=reset] {
             background-color: #56baed;
             border: none;
             color: white;
@@ -107,11 +110,15 @@
             transition: all 0.3s ease-in-out;
         }
 
-        input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+        input[type=button]:hover,
+        input[type=submit]:hover,
+        input[type=reset]:hover {
             background-color: #39ace7;
         }
 
-        input[type=button]:active, input[type=submit]:active, input[type=reset]:active {
+        input[type=button]:active,
+        input[type=submit]:active,
+        input[type=reset]:active {
             -moz-transform: scale(0.95);
             -webkit-transform: scale(0.95);
             -o-transform: scale(0.95);
@@ -168,6 +175,7 @@
                 -webkit-transform: translate3d(0, -100%, 0);
                 transform: translate3d(0, -100%, 0);
             }
+
             100% {
                 opacity: 1;
                 -webkit-transform: none;
@@ -181,6 +189,7 @@
                 -webkit-transform: translate3d(0, -100%, 0);
                 transform: translate3d(0, -100%, 0);
             }
+
             100% {
                 opacity: 1;
                 -webkit-transform: none;
@@ -193,6 +202,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -202,6 +212,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -211,6 +222,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -288,38 +300,39 @@
         #icon {
             width: 30%;
         }
-
     </style>
 </head>
+
 <body>
-<div class="wrapper fadeInDown" style="padding: 0">
-    <div id="formContent" style="margin-top: 8%">
-        <!-- Tabs Titles -->
+    <div class="wrapper fadeInDown" style="padding: 0">
+        <div id="formContent" style="margin-top: 8%">
+            <!-- Tabs Titles -->
 
-        <!-- Icon -->
-        <div class="fadeIn first">
-            <img src="{% static 'imgs/crm.png' %}" id="icon" alt="User Icon"/>
-            <h1>CRM 系统登录</h1>
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <img src="{% static 'imgs/crm.png' %}" id="icon" alt="User Icon" />
+                <h1>CRM 系统登录</h1>
+            </div>
+
+            <!-- Login Form -->
+            <form method="post" action="">{% csrf_token %}
+                <input type="text" id="login" class="fadeIn second" placeholder="用户名" name="username">
+                <input type="text" id="password" class="fadeIn third" placeholder="密码" name="password">
+                <p style="color: red">{{ msg }}</p>
+                <input type="submit" class="fadeIn fourth" value="登录">
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="#">Go to the Site</a>
+            </div>
+
         </div>
-
-        <!-- Login Form -->
-        <form method="post" action="">{% csrf_token %}
-            <input type="text" id="login" class="fadeIn second" placeholder="用户名" name="username">
-            <input type="text" id="password" class="fadeIn third" placeholder="密码" name="password">
-            <p style="color: red">{{ msg }}</p>
-            <input type="submit" class="fadeIn fourth" value="登录">
-        </form>
-
-        <!-- Remind Passowrd -->
-        <div id="formFooter">
-            <a class="underlineHover" href="#">Go to the Site</a>
-        </div>
-
     </div>
-</div>
-<script src="{% static 'js/jquery.js' %}"></script>
-{#<script src="{% static 'js/jquery.ckLine.min.js' %}"></script>#}
-<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>　　
-{#<script src="js/jquery.ckLine.js"></script>#}
+    <script src="{% static 'js/jquery.js' %}"></script>
+    {#<script src="{% static 'js/jquery.ckLine.min.js' %}"></script>#}
+    <script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>　　
+    {#<script src="js/jquery.ckLine.js"></script>#}
 </body>
+
 </html>

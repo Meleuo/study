@@ -24,14 +24,16 @@ class Enrollment(View):
 
         if customer_id != '0':
             customer = models.Customer.objects.filter(id=customer_id).first()
-            obj = models.Enrollment(customer_id=customer_id, enrolment_class=customer.class_list.all().first())
+            obj = models.Enrollment(
+                customer_id=customer_id, enrolment_class=customer.class_list.all().first())
 
             # --> 模板的Title
             title = '添加 %s的报名记录' % customer
 
         # --> 如果consultrecord_id能查到实际的数据, 那么则意味着这次的操作上一次修改 跟进记录 的操作
         elif models.Enrollment.objects.filter(id=int(enrollment_id)):
-            obj = models.Enrollment.objects.filter(id=int(enrollment_id)).first()
+            obj = models.Enrollment.objects.filter(
+                id=int(enrollment_id)).first()
             title = '修改 %s报名记录' % obj.customer
 
         else:  # --> 剩下的最后一个情况就是添加跟进记录
@@ -67,8 +69,10 @@ class Enrollment_list(View):
     def get(self, request):
         customer_id = request.GET.get('customer_id', 0)
         if customer_id != 0:
-            all_enrollment = models.Enrollment.objects.filter(customer_id=customer_id)
-            title = '%s报名记录' % models.Customer.objects.filter(id=customer_id).first()
+            all_enrollment = models.Enrollment.objects.filter(
+                customer_id=customer_id)
+            title = '%s报名记录' % models.Customer.objects.filter(
+                id=customer_id).first()
 
         else:
             all_enrollment = models.Enrollment.objects.all()
@@ -100,9 +104,11 @@ class ConsultRecord(View):
         '''
         consultrecord_id = request.GET.get('consultrecord_id', '0')
 
-        if customer_id != '0':  # --> 判断customer_id是否为0(默认为0), 不为0则这次请求是一个添加指定客户 跟进记录的操作
+        # --> 判断customer_id是否为0(默认为0), 不为0则这次请求是一个添加指定客户 跟进记录的操作
+        if customer_id != '0':
             # -->实例化一个ConsultRecord(跟进记录)的对象, 将当前用户和, 需要修改的客户ID传递给对象, customer_id在跟进记录的表中就是对应着客户
-            obj = models.ConsultRecord(customer_id=customer_id, consultant=request.user)
+            obj = models.ConsultRecord(
+                customer_id=customer_id, consultant=request.user)
 
             # --> 模板的Title
             customer = models.Customer.objects.filter(id=customer_id).first()
@@ -110,7 +116,8 @@ class ConsultRecord(View):
 
         # --> 如果consultrecord_id能查到实际的数据, 那么则意味着这次的操作上一次修改 跟进记录 的操作
         elif models.ConsultRecord.objects.filter(id=int(consultrecord_id)):
-            obj = models.ConsultRecord.objects.filter(id=int(consultrecord_id)).first()
+            obj = models.ConsultRecord.objects.filter(
+                id=int(consultrecord_id)).first()
             title = '修改 %s跟进记录' % obj.customer
 
         else:  # --> 剩下的最后一个情况就是添加跟进记录
@@ -175,7 +182,8 @@ class ConsultRecord_list(View):
     def get(self, request):
         customer_id = request.GET.get('customer_id', '0')
         if customer_id == '0':
-            all_consult_record = models.ConsultRecord.objects.filter(delete_status=False, consultant=request.user)
+            all_consult_record = models.ConsultRecord.objects.filter(
+                delete_status=False, consultant=request.user)
             title = '全部客户跟进记录'
         else:
             all_consult_record = models.ConsultRecord.objects.filter(delete_status=False, customer_id=customer_id,
@@ -258,13 +266,15 @@ class Customer_list(View):
         print(q)
         if request.path_info == reverse('customer_list'):
             # --> 公户
-            all_customer = models.Customer.objects.filter(q, consultant__isnull=True).order_by('-date')
+            all_customer = models.Customer.objects.filter(
+                q, consultant__isnull=True).order_by('-date')
             url = reverse('customer_list')
             title = '公户列表'
 
         else:
             # --> 私户my_customer
-            all_customer = models.Customer.objects.filter(q, consultant=request.user).order_by('-date')
+            all_customer = models.Customer.objects.filter(
+                q, consultant=request.user).order_by('-date')
             url = reverse('my_customer_list')
             title = '私户列表'
 
@@ -273,7 +283,8 @@ class Customer_list(View):
         search_params._mutable = True  # --> 允许request.GET 可有修改, 在QueryDict源代码中可有找到相关的对应内容
         # from  django.http import QueryDict
 
-        pagination_obj = Pagination(search_params, page_num=page_num, all_count=len(all_customer), url=url)
+        pagination_obj = Pagination(
+            search_params, page_num=page_num, all_count=len(all_customer), url=url)
 
         # --> 生成一个QueryDict对象
         nextqd = QueryDict()
@@ -307,7 +318,8 @@ class Customer_list(View):
 
         # --> 一对多反向操作
         with transaction.atomic():
-            add_list = models.Customer.objects.filter(id__in=ids, consultant__isnull=True).select_for_update()
+            add_list = models.Customer.objects.filter(
+                id__in=ids, consultant__isnull=True).select_for_update()
             print('len(add_list)', len(add_list))
             print('len(ids)', len(ids))
             if len(ids) != len(add_list):
@@ -324,7 +336,8 @@ class Customer_list(View):
         # models.Customer.objects.filter(id__in=ids).update(consultant=None)
 
         # --> 一对多反向操作
-        request.user.customers.remove(*models.Customer.objects.filter(id__in=ids))
+        request.user.customers.remove(
+            *models.Customer.objects.filter(id__in=ids))
 
         return True
 

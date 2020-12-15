@@ -14,6 +14,35 @@ from crm import models
 from crm import forms
 
 
+class Courses(View):
+    def get(self, request):
+        form_obj = forms.CourseForm()
+        return render(request, 'crm/teacher/courses.html', {'form_obj': form_obj})
+
+    def post(self, request):
+        form_obj = forms.CourseForm(request.POST)
+        if form_obj.is_valid:
+            form_obj.save()
+            return redirect(reverse('course_list'))
+        return render(request, 'crm/teacher/courses.html', {'form_obj': form_obj})
+
+
+class CourseList(View):
+    def get(self, request):
+        all_course = models.CourseRecord.objects.all()
+        add_btn_html = self.add_button()
+        return render(request, 'crm/teacher/course_list.html', {'all_course': all_course, 'add_btn_html': add_btn_html})
+
+    def add_button(self):
+        qd = QueryDict()
+        qd._mutable = True
+        qd['next'] = self.request.get_full_path()
+        btn_url = '%s?%s' % (reverse('course_edit'), qd.urlencode())
+        btn = '<a class="btn-success btn" style="margin-bottom: 5px"href="{url}">添加记录</a>'.format(
+            url=btn_url)
+        return mark_safe(btn)
+
+
 class Classes(View):
     def get(self, request):
         form_obj = forms.ClassForm()
@@ -29,10 +58,12 @@ class Classes(View):
             return redirect(reverse('class_list'))
         return render(request, 'crm/teacher/classes.html', {'form_obj': form_obj})
 
+
 class ClassList(View):
     def get(self, request):
         # --> 搜索实现
-        all_classs = models.ClassList.objects.filter(self.get_search_contion(['course']))
+        all_classs = models.ClassList.objects.filter(
+            self.get_search_contion(['course']))
 
         # --> 分页
 
@@ -52,7 +83,8 @@ class ClassList(View):
         qd._mutable = True
         qd['next'] = self.request.get_full_path()
         btn_url = '%s?%s' % (reverse('classes'), qd.urlencode())
-        btn = '<a class="btn-success btn" style="margin-bottom: 5px"href="{url}">添加记录</a>'.format(url=btn_url)
+        btn = '<a class="btn-success btn" style="margin-bottom: 5px"href="{url}">添加记录</a>'.format(
+            url=btn_url)
         return mark_safe(btn)
 
     def get_search_contion(self, contions=['course']):
