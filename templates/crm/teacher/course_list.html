@@ -11,6 +11,7 @@
     <form action="" method="post" class="form-inline">{% csrf_token %}
         <select name="action" id="" class="form-control" style="margin-bottom: 5px">
             <option value="none">---</option>
+            <option value="init_studys">初始化学习记录</option>
         </select>
         <button type="submit" class="btn-primary btn" style="margin-bottom: 5px" href="">提交</button>
         <table class="table table-bordered  table-striped">
@@ -32,12 +33,14 @@
                 {% for course   in all_course %}
                 <tr>
                     <td>
-                        <input type="checkbox" value="{{ class_value.id }}">
+                        <input type="checkbox" name="id" value="{{ course.id }}">
                     </td>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ course.day_num }}</td>
                     <td>{{ course.date }}</td>
-                    <td>{{ course.course_title }}</td>
+                    <td>
+                        <a href="{% url 'study_list' course.id %}">{{ course.course_title }}</a>
+                    </td>
                     <td>{{ course.homework_title }}</td>
                     <td>{{ course.scoring_point }}</td>
                     <td>{{ course.re_class }}</td>

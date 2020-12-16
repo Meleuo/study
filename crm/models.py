@@ -184,7 +184,7 @@ class ClassList(models.Model):
                                   null=True)
 
     def __str__(self):
-        return '%s(%s)' % (self.get_course_display(), self.campuses.name)
+        return '第:%s期[%s]_(%s)' % (self.semester,self.get_course_display(), self.campuses.name)
 
     def show_teachers(self):
         return '|'.join([i.username for i in self.teachers.all()])
@@ -283,6 +283,9 @@ class CourseRecord(models.Model):
         'ClassList', on_delete=models.CASCADE, verbose_name="班级")
     teacher = models.ForeignKey(
         'UserProfile', on_delete=models.CASCADE, verbose_name="班主任")
+
+    def __str__(self):
+        return '{course_title}[{day_num}]'.format(course_title=self.course_title, day_num=self.day_num)
 
     class Meta:
         unique_together = ('re_class', 'day_num')

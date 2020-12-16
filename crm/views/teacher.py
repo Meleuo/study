@@ -14,6 +14,19 @@ from crm import models
 from crm import forms
 
 
+
+
+# --> 学习记录
+class StudyList(View):
+    def get(self, request,course_id=0):
+        all_studys = models.StudyRecord.objects.all()
+        title = '学习记录'
+        return render(request, 'crm/teacher/study_list.html', {
+            'all_studys': all_studys,
+            'title': title
+        })
+
+
 class Courses(View):
     def get(self, request):
         title, form_obj = self.get_title_form_obj()
@@ -75,6 +88,36 @@ class CourseList(View):
             'title': '课程记录',
             'page_html': mark_safe(page.show_html)
         })
+
+    def post(self, request):
+        action = request.POST.get('action', '')
+        if not hasattr(self, action):
+            return self.get(request)
+
+        getattr(self, action)()
+        return self.get(request)
+
+    def init_studys(self):
+        course_ids = self.request.POST.getlist('id', '')
+        courses = models.CourseRecord.objects.filter(id__in=course_ids)
+        for course in courses:
+            all_students = course.re_class.customer_set.filter(status='studying')
+            student_list = []
+            for student in all_students:
+                student_list.append(models.StudyRecord(
+                    course_record=course,
+                    student=student))
+                '''
+                方法1: 挨个create, 弊端: 每一次添加就是一条sql, 执行效率慢
+                models.StudyRecord.objects.create(
+                    course_record=course,
+                    student=customer
+                )
+                '''
+            #-> 方法二 将数据全部先实例化到内存中, 在借助bulk_create方法, 一条SQL即可添加
+            models.StudyRecord.objects.bulk_create(student_list)
+
+
 
     def add_button(self):
         qd = QueryDict()

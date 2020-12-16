@@ -33,6 +33,9 @@ urllist2 = [
     path('class/edit', teacher.Classes.as_view(), name='classes'),
     path('course/list', teacher.CourseList.as_view(), name='course_list'),
     path('course/edit', teacher.Courses.as_view(), name='course_edit'),
+    path('study/list/<int:course_id>', teacher.StudyList.as_view(), name='study_list'),
+    # path('study/edit/<', teacher.Study.as_view(), name='study_edit'),
+
 ]
 
 # --> 合并路由

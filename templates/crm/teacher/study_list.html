@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_titile %}{{ title }}{% endblock %}
+{% block content %}
+    <div class="bs-example" data-example-id="bordered-table">
+        {{ add_btn_html }}
+        <form action="" method="get" class="form-inline pull-right">
+            <input type="text" class="form-control" name="search">
+            <button type="submit" class="btn btn-primary">搜索<span class="glyphicon glyphicon-search"></span></button>
+        </form>
+        <form action="" method="post" class="form-inline">{% csrf_token %}
+            <select name="action" id="" class="form-control" style="margin-bottom: 5px">
+                <option value="none">---</option>
+            </select>
+            <button type="submit" class="btn-primary btn" style="margin-bottom: 5px" href="">提交</button>
+            <table class="table table-bordered  table-striped">
+                <thead>
+                <tr>
+                    <th>选择</th>
+                    <th>序号</th>
+                    <th>考勤</th>
+                    <th>本节成绩</th>
+                    <th>作业批语</th>
+                    <th>时间</th>
+                    <th>备注</th>
+                    <th>作业文件</th>
+                    <th>某节课程</th>
+                    <th>学员</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for study   in all_studys %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" value="{{ study.id }}">
+                        </td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ study.attendance }}</td>
+                        <td>{{ study.score }}</td>
+                        <td>{{ study.homework_note }}</td>
+                        <td>{{ study.date }}</td>
+                        <td>{{ study.note }}</td>
+                        <td>{{ study.homework }}</td>
+                        <td>{{ study.course_record }}</td>
+                        <td>{{ study.student }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </form>
+        <nav aria-label="Page navigation" style="text-align: center">
+            <ul class="pagination">
+                {{ page_html }}
+            </ul>
+        </nav>
+        {#    </div>#}
+{% endblock %}
