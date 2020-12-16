@@ -8,12 +8,17 @@ from django.core.exceptions import ValidationError
 
 
 class BaseForm(forms.ModelForm):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
 
+
+class StudyForm(BaseForm):
+    class Meta:
+        model = models.StudyRecord
+        # fields = '__all__'
+        exclude = ['homework', 'course_record', 'student']
 
 # -->  班级记录Form
 class CourseForm(BaseForm):

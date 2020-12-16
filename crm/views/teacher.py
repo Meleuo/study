@@ -12,18 +12,32 @@ from django.http import QueryDict
 from utils.pagination import Pagination
 from crm import models
 from crm import forms
-
-
+from django.forms import modelformset_factory
 
 
 # --> 学习记录
 class StudyList(View):
-    def get(self, request,course_id=0):
-        all_studys = models.StudyRecord.objects.all()
+    def get(self, request, course_id=0):
         title = '学习记录'
+        all_studys = models.StudyRecord.objects.filter(course_record_id=course_id)
+        FormSet = modelformset_factory(model=models.StudyRecord, form=forms.StudyForm, extra=0)
+
+        form_obj = FormSet(queryset=all_studys)
+
         return render(request, 'crm/teacher/study_list.html', {
-            'all_studys': all_studys,
-            'title': title
+            'title': title,
+            'form_obj': form_obj
+        })
+
+    def post(self, request, course_id=0):
+        title = '学习记录'
+        FormSet = modelformset_factory(model=models.StudyRecord, form=forms.StudyForm, extra=0)
+        form_obj = FormSet(request.POST)
+        if form_obj.is_valid():
+            form_obj.save()
+        return render(request, 'crm/teacher/study_list.html', {
+            'title': title,
+            'form_obj': form_obj
         })
 
 
@@ -114,10 +128,8 @@ class CourseList(View):
                     student=customer
                 )
                 '''
-            #-> 方法二 将数据全部先实例化到内存中, 在借助bulk_create方法, 一条SQL即可添加
+            # -> 方法二 将数据全部先实例化到内存中, 在借助bulk_create方法, 一条SQL即可添加
             models.StudyRecord.objects.bulk_create(student_list)
-
-
 
     def add_button(self):
         qd = QueryDict()
