@@ -49,8 +49,6 @@ MIDDLEWARE = [
     'django.middleware.cache.FetchFromCacheMiddleware'  # --> 请求走到这里从缓存中获取数据
 ]
 
-
-
 ROOT_URLCONF = 'django_cache_test.urls'
 
 TEMPLATES = [
@@ -118,13 +116,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # --> 指定缓存引擎为内存
-        'LOCATION': 'unique-snowflake',
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',  # --> 指定缓存引擎为文件缓存
+        'LOCATION': '/tmp/djang_cache/',  # --> 缓存文件存放路径
+        'TIMEOUT': 30,  # --> 最大缓存时间
     }
 }
-CACHE_MIDDLEWARE_SECONDS = 5 #--> 缓存刷新时间为5s
+# CACHE_MIDDLEWARE_SECONDS = 5 #--> 缓存刷新时间为5s
 # CACHE_MIDDLEWARE_ALIAS = ""
 # CACHE_MIDDLEWARE_KEY_PREFIX = ""

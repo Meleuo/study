@@ -18,14 +18,19 @@ from django.contrib import admin
 from django.urls import path
 from django.shortcuts import render
 
+from django.views.decorators.cache import cache_page  # --> 视图绑定缓存的语法糖
 
+
+@cache_page(5)  # --> 第一个参数为缓存的时间
 def test_view(request):
-    return  render(request, 'test.html', {
+    return render(request, 'test.html', {
         'time': time.time()
     })
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', test_view)
+    path('test/', test_view),
+    # path('test/', cache_page(5)(test_view))  # --> 为视图绑定缓存也可以在URL上面绑定
+
 ]
