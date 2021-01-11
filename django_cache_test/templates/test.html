@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-{{ time }}
+{% load cache %}
+{% cache 3 'CACHE_KEY' %}
+    {{ time }}
+{% endcache %}
 </body>
 </html>

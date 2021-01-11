@@ -116,13 +116,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',  # --> 指定缓存引擎为文件缓存
-        'LOCATION': '/tmp/djang_cache/',  # --> 缓存文件存放路径
-        'TIMEOUT': 30,  # --> 最大缓存时间
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',  # --> 指定缓存引擎为文件缓存
+#         'LOCATION': '/tmp/djang_cache/',  # --> 缓存文件存放路径
+#         'TIMEOUT': 30,  # --> 最大缓存时间
+#     }
+# }
 # CACHE_MIDDLEWARE_SECONDS = 5 #--> 缓存刷新时间为5s
 # CACHE_MIDDLEWARE_ALIAS = ""
 # CACHE_MIDDLEWARE_KEY_PREFIX = ""
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',  # --> 指定缓存引擎为文件缓存
+        'LOCATION': 'django_cache_test_tb',  # --> 缓存文件存放路径
+        'TIMEOUT': 30,  # --> 最大缓存时间
+    }
+}

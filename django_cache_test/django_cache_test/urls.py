@@ -21,7 +21,7 @@ from django.shortcuts import render
 from django.views.decorators.cache import cache_page  # --> 视图绑定缓存的语法糖
 
 
-@cache_page(5)  # --> 第一个参数为缓存的时间
+# @cache_page(5)  # --> 第一个参数为缓存的时间
 def test_view(request):
     return render(request, 'test.html', {
         'time': time.time()
