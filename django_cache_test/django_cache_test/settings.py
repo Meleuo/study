@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',  # --> 返回相应到这里将数据存入缓存
+    # 'django.middleware.cache.UpdateCacheMiddleware',  # --> 返回相应到这里将数据存入缓存
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -46,7 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware'  # --> 请求走到这里从缓存中获取数据
+    # 'django.middleware.cache.FetchFromCacheMiddleware'  # --> 请求走到这里从缓存中获取数据
 ]
 
 ROOT_URLCONF = 'django_cache_test.urls'
