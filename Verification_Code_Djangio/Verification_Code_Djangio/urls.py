@@ -1,4 +1,4 @@
-"""django_cache_test URL Configuration
+"""Verification_Code_Djangio URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -13,16 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-import time
 from django.contrib import admin
 from django.urls import path
-from django.shortcuts import render
-from test_app import views
-
-
+from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', views.test_view),
-    # path('test/', cache_page(5)(test_view))  # --> 为视图绑定缓存也可以在URL上面绑定
-
+    path('login/', views.Login.as_view()),
+    path('code/', views.V_Code.as_view())
 ]

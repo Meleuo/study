@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="" method="post">{% csrf_token %}
+    <input type="text" name="username">用户名
+    <br>
+    <input type="text" name="password">密码
+    <br>
+    <input type="text" name="v_code">请输入图片中的验证码
+
+    <br>
+    <img src="/code/" alt="" id="code_img">
+    <br>
+    <p style="color: red">{{ error_msg }}</p>
+
+    <input type="submit" value="登录">
+</form>
+</body>
+<script>
+
+    codeEle = document.getElementById('code_img')
+    codeEle.onclick = function () {
+        randomStr = (new Date()).getTime()
+        codeEle.setAttribute('src', '/code/?' + randomStr)
+    }
+    {##}
+</script>
+</html>
