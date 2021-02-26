@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "layui_demo"
+		},
+		{
+			"path": "layui_html"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "layui_html"
+	}
+}
